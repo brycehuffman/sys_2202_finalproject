@@ -12,13 +12,6 @@ library(countrycode)
 
 ####-------------------------------------------- GGPLOT style map ----------------------------------------------#####
 
-library(tidyverse)
-library(rvest)
-library(magrittr)
-library(ggmap)
-library(stringr)
-library(countrycode)
-
 # Append ISO3 codes to the map.word data to be able to merge with the other data frames 
 map.world<-map_data("world")
 map.world$ISO = 0
