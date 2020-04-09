@@ -84,12 +84,4 @@ write.csv(mortalityMaleFinal, "mortalityMaleFinal.csv", row.names = FALSE)
 write.csv(mortalityFemaleFinal, "mortalityFemaleFinal.csv", row.names = FALSE)
 write.csv(gdpFinal, "gdpFinal.csv", row.names = FALSE)
 
-# Import all of the libraries necessary to create a world map 
-# Next, we load in our world data with geograpical coordinates directly from package *ggplot2*. These data 
-# contain geographical coordinates of all countries worldwide, which we'll later need to plot the worldmaps.
 
-library(maps)
-library(ggplot2)
-world_data <- ggplot2::map_data('world')
-world_data <- fortify(world_data)
-head(world_data)
