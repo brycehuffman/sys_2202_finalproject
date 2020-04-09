@@ -23,12 +23,12 @@ map.world_joined5<-left_join(map.world,mortalityFemaleFinal,by=c('ISO'='ISO3')) 
 # Get User input to change the colors of the chloropleth map 
 
 # User specified Year
-Start_year = 2011
+Start_year = 2017
 
 # User Specified DataSource
 #name = "Female Mortality"
-#name = "Male Mortality"
-name = "GDP"
+name = "Male Mortality"
+#name = "GDP"
 #name = "Female Literacy"
 #name = "Male Literacy"
 
@@ -76,19 +76,18 @@ DataSource$lnfactors <- with(DataSource, pmin(log(1.5+DataSource$factors),.6))  
 # Generate a plot of the World choosing what chlorpleth data you want to see
 
 # CHOOSE WHAT TYPE OF COLOR SCHEMA YOU WANT
-#filler = factor(DataSource[,a])                     # Get color coated map of World GDP 
 #filler = DataSource$factors                         # Get gradient map of World GDP as a percentage of highest GDP
-filler = DataSource$lnfactors                        # Get gradient map of World GDP normalized to show differences::: 
-# DO NOT ALLOW LN FOR MALE LITERACY RATES
+filler = DataSource$lnfactors                      # Get gradient map of World GDP normalized to show differences::: 
+# DO NOT ALLOW LN FOR MALE OR FEMALE LITERACY RATES
 
 # Calculate the scale to customize the legend used in the Map
-
 max_n = max(na.omit(filler))
 min_n = min(na.omit(filler))
 range_n = max_n - min_n
 size_ticks = range_n/6
 
-tick0 = min_n
+# Get the units of the tick marks set
+tick0 = min_n                                                
 tick1 = tick0 + size_ticks
 tick2 = tick1 + size_ticks
 tick3 = tick2 + size_ticks
@@ -96,12 +95,13 @@ tick4 = tick3 + size_ticks
 tick5 = tick4 + size_ticks
 tick6 = max_n
 
-max_value = as.integer(max(na.omit(DataSource[,a])))
+# Get quartiles for the legend 
+max_value = as.integer(max(na.omit(DataSource[,a])))           
 min_value = as.integer(min(na.omit(DataSource[,a])))
-q2_value = as.integer((1*max_value-min_value)/3)
-q3_value = as.integer((2*(max_value-min_value)/3))
+q2_value = as.integer((1*(max_value-min_value)/3)+min_value)
+q3_value = as.integer((2*(max_value-min_value)/3)+min_value)
 
-
+#Set labels for the legend ticks
 lab0 = min_value
 lab1 = " "
 lab2 = q2_value
