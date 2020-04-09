@@ -257,16 +257,3 @@ myMap<-ggplot() +
   )
 
 myMap
-
-
-?theme
-?element_text
-
-theme# Calculate Centroids for the countries and add labels to the plot
-
-library("ggplot2")
-library("sf")
-library("maps")
-states <- st_as_sf(map("state", plot = FALSE, fill = TRUE))
-head(states)
-states <- cbind(states, st_coordinates(st_centroid(states)))
