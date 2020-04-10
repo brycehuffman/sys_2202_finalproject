@@ -334,3 +334,35 @@ myMap<-ggplot() +
 
 myMap
 
+##### -------------------------- Interactive version of the ggplot Map ------------------------------- #####
+
+library(ggplot2)
+library(ggiraph)
+library(RColorBrewer)
+
+DataSource$Country = DataSource$region
+DataSource$Country = paste(DataSource$Country,":",as.integer(DataSource[,a]))
+
+myMap2<-ggplot() +
+  geom_polygon_interactive(data = DataSource, aes(x = long, y = lat, group = group, fill = filler,tooltip = Country,data_id=region)) +
+  labs(title = paste(Start_year,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."),caption = paste("source: ",Contributor)) +
+  scale_fill_gradientn(name=name,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
+                       breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
+                       labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
+  theme(text = element_text(color = "#FFFFFF")
+        ,panel.background = element_rect(fill = "#444444")
+        ,plot.background = element_rect(fill = "#444444")
+        ,panel.grid = element_blank()
+        ,plot.title = element_text(size = 30)
+        ,plot.subtitle = element_text(size = 10)
+        ,axis.text = element_blank()
+        ,axis.title = element_blank()
+        ,axis.ticks = element_blank()
+        ,legend.position = "right"
+        ,legend.background = element_rect(fill = "#444444")
+  )
+
+# Create an interactive plot with zoom and hover controls with an aspect ratio of 10:6
+ggiraph(code = print(myMap2),tooltip_offx = 20, tooltip_offy = -10,width_svg = 10,height_svg = 6,zoom_max = 4)
+
+
