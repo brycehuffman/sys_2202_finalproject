@@ -7,7 +7,7 @@ server <- function(input, output){
 }
 
 ui <- fluidPage(
-  
+  titlePanel("Health and Economic Factors Visualization")
   
   
   
@@ -17,3 +17,5 @@ ui <- fluidPage(
   
   
 )
+
+shinyApp(ui=ui, server=server)
