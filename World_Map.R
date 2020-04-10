@@ -162,5 +162,5 @@ myMap<-ggplot() +
         ,legend.background = element_rect(fill = "#F2F3F4")
   )
 
-myMap
+ggsave("worldMap.png", plot = last_plot(), dpi = 800)
 
