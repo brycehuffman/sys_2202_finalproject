@@ -1,6 +1,7 @@
 library(tidyr)
 library(WDI)
 library(dplyr)
+library(rvest)
 
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1950, end = 2018)
 write.csv(gdp, 'gdp.csv', row.names = FALSE)
