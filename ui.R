@@ -19,5 +19,3 @@ ui <- fluidPage(
 )
 
 shinyApp(ui=ui, server=server)
-
-# hi people
