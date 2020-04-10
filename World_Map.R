@@ -6,6 +6,7 @@ library(magrittr)
 library(ggmap)
 library(stringr)
 library(countrycode)
+library(RColorBrewer)
 
 # Append ISO3 codes to the map.word data to be able to merge long/lat polygon data with the other data frames 
 map.world<-map_data("world")
