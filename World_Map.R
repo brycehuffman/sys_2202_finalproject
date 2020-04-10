@@ -146,12 +146,12 @@ plotType = ln[1]
 myMap<-ggplot() +
   geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler)) +
   labs(title = paste(Start_year,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."),caption = paste("source: ",Contributor)) +
-  scale_fill_gradientn(name=name,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
+  scale_fill_gradientn(name=name,colours = brewer.pal(5, "YlOrRd"), na.value = 'white',
                        breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
                        labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
-  theme(text = element_text(color = "#FFFFFF")
-        ,panel.background = element_rect(fill = "#444444")
-        ,plot.background = element_rect(fill = "#444444")
+  theme(text = element_text(color = "#17202A")
+        ,panel.background = element_rect(fill = "#D7DBDD")
+        ,plot.background = element_rect(fill = "#D7DBDD")
         ,panel.grid = element_blank()
         ,plot.title = element_text(size = 30)
         ,plot.subtitle = element_text(size = 10)
@@ -159,7 +159,7 @@ myMap<-ggplot() +
         ,axis.title = element_blank()
         ,axis.ticks = element_blank()
         ,legend.position = "right"
-        ,legend.background = element_rect(fill = "#444444")
+        ,legend.background = element_rect(fill = "#F2F3F4")
   )
 
 myMap
