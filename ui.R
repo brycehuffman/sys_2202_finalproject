@@ -26,6 +26,14 @@ ui <- fluidPage(
               "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
           )
             
+      ),
+      wellPanel(
+        h4("Select"),
+        selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
+          c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
+            "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
+            "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                    )
       )
 
     )
