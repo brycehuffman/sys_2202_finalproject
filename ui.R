@@ -2,6 +2,18 @@
 library(shiny)
 
 # define the UI
-ui <- function(input, output){
+server <- function(input, output){
   
 }
+
+ui <- fluidPage(
+  
+  
+  
+  
+  
+  
+  
+  
+  
+)
