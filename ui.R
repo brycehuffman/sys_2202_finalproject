@@ -37,20 +37,22 @@ ui <- fluidPage(
           "<><><><><><><this is a place to add notes><><><><><><>")
                     )
       ),
-      mainPanel(
       column(8,
-             plotOutput("myMap")
+             wellPanel(
+               plotOutput("testPlot")
+             )
+  
 
     )
       )
   )
 )
-)
+
 
 # define the Server
-server <- function(input, output){
-  output$myMap <-renderPlot({myMap}, width = 600, height = 400) ## plot map in R Shiny
-}
+# server <- function(input, output){
+#   output$myMap <-renderPlot({myMap}, width = 600, height = 400) ## plot map in R Shiny
+# }
 
 
-shinyApp(ui=ui, server=server)
+# shinyApp(ui=ui, server=server)
