@@ -6,7 +6,7 @@ library(magrittr)
 library(ggmap)
 library(stringr)
 library(countrycode)
-library(RColorBrewer)
+library(ggplot2)
 
 # Append ISO3 codes to the map.word data to be able to merge long/lat polygon data with the other data frames 
 map.world<-map_data("world")
@@ -22,12 +22,12 @@ map.world_joined4<-left_join(map.world,mortalityMaleFinal,by=c('ISO'='ISO3'))   
 map.world_joined5<-left_join(map.world,mortalityFemaleFinal,by=c('ISO'='ISO3'))      # Female Mortality
 
 # Get User specified Year
-Start_year = 2015
+Start_year = 2000
 
 # Get User Specified DataSource
 #name = "Female Mortality"
-#name = "Male Mortality"
-name = "GDP"
+name = "Male Mortality"
+#name = "GDP"
 #name = "Female Literacy"
 #name = "Male Literacy"
 
@@ -62,33 +62,36 @@ if(name=="Female Mortality"){
   }
 }
 
-# Get a boolean column to see whether or not there is a missing value at the user specified date
+# Get column corresponding to user specified date and create a boolean column for missing values
 a = as.numeric(which(names(DataSource)==Start_year))                        # get the column corresponding to user specified date 
 DataSource$missingD2 = with(DataSource, is.na(DataSource[,a]))              # see which rows are missing data for the specified year
 
 
-# Apply a logarithmic scale to normalize the color distribution of the world map 
-Selected = DataSource[,a]                                                             # User selected year
+# Apply a logarithmic scale to normalize the color distribution of the world map for GDP
+Selected = DataSource[,a]                                                             # Data for choosen attribute for user selected year
 DataSource$factors = Selected/(max(na.omit(Selected)))                                # Get a ratio for GDP values from max GDP for that year
-DataSource$lnfactors = with(DataSource, pmin(log(1.5+DataSource$factors),.6))        # Apply ln transform to normalize colors on graph
+DataSource$lnfactors = with(DataSource, pmin(log(1.5+DataSource$factors),.6))         # Apply ln transform to normalize colors on graph
 
-# CHOOSE WHAT TYPE OF COLOR SCHEMA YOU WANT (regular or log-scale)
+# CHOOSE WHAT TYPE OF COLOR SCHEMA YOU WANT (regular or log-scale) based on 
+# type of data set and "spread" of the data altogether
 
 if(name=="GDP"){
   filler = DataSource$lnfactors
 }else{
     filler = DataSource$factors}
 
-ln = na.omit(ifelse(filler==DataSource$factors,"linear","logarithmic"))
-plotType = ln[1]
+  # See what Type of plot you are using -- (Could be replaced by just a name check but who knows if you'll need it later)
+  ln = na.omit(ifelse(filler==DataSource$factors,"linear","logarithmic"))
+  plotType = ln[1]
 
   # Calculate the scale to customize the legend used in the Map
   max_n = max(na.omit(filler))
   min_n = min(na.omit(filler))
-  range_n = max_n - min_n
+  range_n = max_n-min_n
   size_ticks = range_n/6
   
-  # Get the units of the tick marks set
+  
+  # Get the units of the tick marks on the legend set
   tick0 = min_n                                                
   tick1 = tick0 + size_ticks
   tick2 = tick1 + size_ticks
@@ -146,12 +149,12 @@ plotType = ln[1]
 myMap<-ggplot() +
   geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler)) +
   labs(title = paste(Start_year,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."),caption = paste("source: ",Contributor)) +
-  scale_fill_gradientn(name=name,colours = brewer.pal(5, "YlOrRd"), na.value = 'white',
+  scale_fill_gradientn(name=name,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
                        breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
                        labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
-  theme(text = element_text(color = "#17202A")
-        ,panel.background = element_rect(fill = "#D7DBDD")
-        ,plot.background = element_rect(fill = "#D7DBDD")
+  theme(text = element_text(color = "#FFFFFF")
+        ,panel.background = element_rect(fill = "#444444")
+        ,plot.background = element_rect(fill = "#444444")
         ,panel.grid = element_blank()
         ,plot.title = element_text(size = 30)
         ,plot.subtitle = element_text(size = 10)
@@ -159,8 +162,43 @@ myMap<-ggplot() +
         ,axis.title = element_blank()
         ,axis.ticks = element_blank()
         ,legend.position = "right"
-        ,legend.background = element_rect(fill = "#F2F3F4")
+        ,legend.background = element_rect(fill = "#444444")
   )
 
+myMap
 ggsave("worldMap.png", plot = last_plot(), dpi = 800)
 
+
+##### -------------------------- Interactive version of the ggplot Map ------------------------------- #####
+
+require(ggplot2)
+require(ggiraph) # Use interactive library to get interactive labels and zoom capabilities for plot
+require(RColorBrewer)
+
+# Get the value to be shown when you hover over the map with the mouse
+DataSource$Country = DataSource$region
+DataSource$Country = paste(DataSource$Country,":",as.integer(DataSource[,a]))
+
+myMap2<-ggplot() +
+  geom_polygon_interactive(data = DataSource, aes(x = long, y = lat, group = group, fill = filler, tooltip = Country, data_id = region)) +
+  labs(title = paste(Start_year,name,sep = " "), subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."), caption = paste("source: ",Contributor)) +
+  scale_fill_gradientn(name=name,
+                       colours = brewer.pal(5, "RdYlBu"), 
+                       na.value = 'white',
+                       breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
+                       labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
+  theme(text = element_text(color = "#FFFFFF")
+        ,panel.background = element_rect(fill = "#444444")
+        ,plot.background = element_rect(fill = "#444444")
+        ,panel.grid = element_blank()
+        ,plot.title = element_text(size = 30)
+        ,plot.subtitle = element_text(size = 10)
+        ,axis.text = element_blank()
+        ,axis.title = element_blank()
+        ,axis.ticks = element_blank()
+        ,legend.position = "right"
+        ,legend.background = element_rect(fill = "#444444")
+  )
+
+# Create an interactive plot with zoom and hover controls with an aspect ratio of 10:6
+ggiraph(code = print(myMap2),tooltip_offx = 20, tooltip_offy = -10,width_svg = 10,height_svg = 6,zoom_max = 4)
