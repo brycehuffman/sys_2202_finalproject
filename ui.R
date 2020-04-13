@@ -5,7 +5,7 @@ library(ggvis)
 ui <- fluidPage(
   titlePanel("Health and Economic Factors Visualization"),
   fluidRow(
-    column(2,
+    column(4,
       wellPanel(
         h4("Select World Map Options"),
           selectInput("map_factor", "Choose a factor for world map visualization.",
