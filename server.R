@@ -1,4 +1,8 @@
+##### Packages #####
 library(ggplot2) # required for 2 dataframe scatterplot
+library(ggvis)
+
+##### Define Server #####
 server <- function(input, output){
 
   worldMapData <- reactive({
@@ -9,7 +13,6 @@ server <- function(input, output){
     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortailityFemaleFinal)
     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityMaleFinal)
   })
-  
   
   scatterPlotXData <- reactive({
     if ("Real GDP per Capita, 2010 US Dollars" %in% input$x_factor) return(gdpFinal)
@@ -30,35 +33,36 @@ server <- function(input, output){
   })
   
   
+  # A reactive expression with the ggvis plot
+  scatterDataMerge <- reactive({
+    x_data <- scatterPlotXData %>% select(c("ISO2", toString(input$year))) # selects correct year and all countries
+    y_data <- scatterPlotYData %>% select(c("ISO2", toString(input$year))) # selects correct year and all countries
+    return(left_join(x_data, y_data, by = c("ISO2")))
+  })
+
   
+    # output$scatterPlot <- # fix format assignment
+    #   ggvis(x = xvar, y = yvar) %>%
+    #   layer_points(size := 50, size.hover := 200,
+    #                fillOpacity := 0.2, fillOpacity.hover := 0.5,
+    #                stroke = ~has_oscar, key := ~ID) %>%
+    #   add_tooltip(movie_tooltip, "hover") %>%
+    #   add_axis("x", title = input$x_factor) %>%
+    #   add_axis("y", title = input$y_factor) %>%
+    #   # add_legend("stroke", title = "Won Oscar", values = c("Yes", "No")) %>%
+    #   # scale_nominal("stroke", domain = c("Yes", "No"),
+    #   #               range = c("orange", "#aaa")) %>%
+    #   set_options(width = 500, height = 500)
+
   
+  # vis %>% bind_shiny("scatterPlot")
   
-  # if (input$map_factor == "Real GDP per Capita, 2010 US Dollars"){
-  #   mapData = gdpFinal
-  # }
-  # if (input$map_factor == "Male Literacy Rate, over 15 years old"){
-  #   mapData = literacyMaleFinal
-  # }
-  # if (input$map_factor == "Female Literacy Rate, over 15 years old"){
-  #   mapData = literacyFemaleFinal
-  # }
-  # if (input$map_factor == "Infant Mortality Rate per 1000, under 5"){
-  #   mapData = mortalityBTSXFinal
-  # }
-  # if (input$map_factor == "Female Infant Mortality Rate per 1000, under 5"){
-  #   mapData = mortalityFemaleFinal
-  # }
-  # if (input$map_factor == "Male Infant Mortality Rate per 1000, under 5"){
-  #   mapData = mortalityFemaleFinal
-  # }
-  # output$testPlot <- renderPlot({ggplot()
+  # output$testPlot <- renderPlot({ggplot() +
+  #     ggplot2::geom_point(data=scatterPlotXData, aes(input$year)) +
+  #     ggplot2::geom_point(data=scatterPlotYData, aes(input$year))})
+
   
-  # output$testPlot <- renderPlot({ggplot()
-  #   hist(rnorm(input$obs), col = 'darkgray', border = 'white')
+
     
-    
-    
-    
   
-  
-}
+} # close server
