@@ -35,12 +35,12 @@ server <- function(input, output){
   
   # A reactive expression with the ggvis plot
   scatterDataMerge <- reactive({
-    x_data <- scatterPlotXData() %>% select(c("ISO2", toString(input$year_scatter))) # selects correct year and all countries
-    y_data <- scatterPlotYData() %>% select(c("ISO2", toString(input$year_scatter))) # selects correct year and all countries
-    return(left_join(x_data(), y_data(), by = c("ISO2" = "ISO2")))
+    x_data <- as.data.frame(scatterPlotXData()) %>% select(c("ISO2", toString(input$year_scatter))) # selects correct year and all countries
+    y_data <- as.data.frame(scatterPlotYData()) %>% select(c("ISO2", toString(input$year_scatter))) # selects correct year and all countries
+    return(left_join(x_data, y_data, by = c("ISO2" = "ISO2")))
   })
   
-# output$testPlot <- renderPlot({ggplot(data = scatterDataMerge())+geom_point(x=input$year, y=input$year)})
+output$testPlot <- renderPlot({ggplot(data = scatterDataMerge())+geom_point(x=input$year, y=input$year)})
 
   
    #   ggvis(x = xvar, y = yvar) %>%
