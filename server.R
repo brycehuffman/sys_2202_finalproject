@@ -5,6 +5,7 @@ library(ggvis)
 ##### Define Server #####
 server <- function(input, output){
 
+  ##### WORLD MAP COMPONENT #####
   worldMapData <- reactive({
     if ("Real GDP per Capita, 2010 US Dollars" %in% input$map_factor) return(gdpFinal)
     if ("Male Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyMaleFinal)
@@ -13,6 +14,10 @@ server <- function(input, output){
     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortailityFemaleFinal)
     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityMaleFinal)
   })
+  
+  
+  
+  ##### SCATTERPLOT COMPONENT #####
   
   scatterPlotXData <- reactive({
     if ("Real GDP per Capita, 2010 US Dollars" %in% input$x_factor) return(gdpFinal)
@@ -40,7 +45,7 @@ server <- function(input, output){
     return(left_join(x_data, y_data, by = c("ISO2" = "ISO2")))
   })
   
-output$testPlot <- renderPlot({ggplot(data = scatterDataMerge())+geom_point(x=input$year, y=input$year)})
+# output$testPlot <- renderPlot({ggplot(data = scatterDataMerge())+geom_point(x=input$year, y=input$year)})
 
   
    #   ggvis(x = xvar, y = yvar) %>%
