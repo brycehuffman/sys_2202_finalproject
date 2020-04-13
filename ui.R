@@ -40,7 +40,7 @@ ui <- fluidPage(
       ),
       column(8,
              wellPanel(
-               plotOutput("testPlot")
+               plotOutput("mapTest")
              )
   
 
