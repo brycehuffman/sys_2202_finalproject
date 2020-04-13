@@ -22,12 +22,12 @@ map.world_joined4<-left_join(map.world,mortalityMaleFinal,by=c('ISO'='ISO3'))   
 map.world_joined5<-left_join(map.world,mortalityFemaleFinal,by=c('ISO'='ISO3'))      # Female Mortality
 
 # Get User specified Year
-Start_year = 2000
+Start_year = 2018
 
 # Get User Specified DataSource
 #name = "Female Mortality"
-name = "Male Mortality"
-#name = "GDP"
+#name = "Male Mortality"
+name = "GDP"
 #name = "Female Literacy"
 #name = "Male Literacy"
 
@@ -166,7 +166,7 @@ myMap<-ggplot() +
   )
 
 myMap
-ggsave("worldMap.png", plot = last_plot(), dpi = 800)
+#ggsave("worldMap.png", plot = last_plot(), dpi = 800)
 
 
 ##### -------------------------- Interactive version of the ggplot Map ------------------------------- #####
