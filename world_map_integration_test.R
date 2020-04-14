@@ -207,7 +207,7 @@ Start_year = reactive({
 })
 
 # setup reactive variable for map factor in UI
-scatter_x_reactive <- reactive({
+name <- reactive({
   if ("Real GDP per Capita, 2010 US Dollars" %in% input$map_factor) return("GDP")
   if ("Male Literacy Rate, over 15 years old" %in% input$map_factor) return("Male Literacy")
   if ("Female Literacy Rate, over 15 years old" %in% input$map_factor) return("Female Literacy")
