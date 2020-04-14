@@ -18,7 +18,7 @@ if(!require(countrycode)) install.packages("countrycode", repos = "http://cran.u
 if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
 if(!require(ggiraph)) install.packages("ggiraph", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
-
+if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
 
 ##### DATA PROCESSING (AS OF 4/13) #####
 
@@ -162,7 +162,7 @@ ui <- fluidPage(
       )),
       column(9, wellPanel( 
         h4("World Map Visualization"),
-        plotOutput("mapPlot")),
+        plotlyOutput("mapPlot", width = 800, height = 500)),
         # ggiraphOutput("intMapPlot")), for interactive plot
         
         wellPanel(
@@ -337,19 +337,17 @@ createWorldMap <- function(name, year_input){
   DataSource$Country = DataSource$region
   DataSource$Country = paste(DataSource$Country,":",as.integer(DataSource[,a]))
   
-  myMap2<-ggplot() +
-    geom_polygon_interactive(data = DataSource, aes(x = long, y = lat, group = group, fill = filler, tooltip = Country, data_id = region)) +
-    labs(title = paste(year_input,name,sep = " "), subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."), caption = paste("source: ",Contributor)) +
-    scale_fill_gradientn(name=name,
-                         colours = brewer.pal(5, "RdYlBu"), 
-                         na.value = 'white',
+  myMap<-ggplot() +
+    geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler,text = paste0("Country : ", region, "<br>","Value : ", as.integer(DataSource[,a])))) +
+    labs(title = paste(year_input,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale.") ,caption = paste("source: ",Contributor)) +
+    scale_fill_gradientn(name=legend,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
                          breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
                          labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
     theme(text = element_text(color = "#FFFFFF")
           ,panel.background = element_rect(fill = "#444444")
           ,plot.background = element_rect(fill = "#444444")
           ,panel.grid = element_blank()
-          ,plot.title = element_text(size = 30)
+          ,plot.title = element_text(size = 20)
           ,plot.subtitle = element_text(size = 10)
           ,axis.text = element_blank()
           ,axis.title = element_blank()
@@ -357,7 +355,15 @@ createWorldMap <- function(name, year_input){
           ,legend.position = "right"
           ,legend.background = element_rect(fill = "#444444")
     )
+  
   # for interactive plot myMap2<- ggiraph(code = print(myMap2),tooltip_offx = 20, tooltip_offy = -10,width_svg = 10,height_svg = 6,zoom_max = 4)
+  myMap2 <- ggplotly(myMap,tooltip = "text") %>%
+    # get the subtitle and title for the plot
+    layout(title = list(text = paste0(year_input," ",name,
+                                      '<br>',
+                                      '<sup>',
+                                      data_units," with colors displayed on a ",plotType," scale.",
+                                      '</sup>')))
   return(myMap2)
 }
 
@@ -407,9 +413,10 @@ server <- function(input, output){
   })
 
   # create World Map Plot Output
-    output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
+    # output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
     # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
-  
+     output$mapPlot <- renderPlotly({createWorldMap(name(), Start_year())}) 
+
   
 ## Reactive Scatterplot
   
