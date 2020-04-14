@@ -19,8 +19,6 @@ server <- function(input, output){
 
   ##### WORLD MAP COMPONENT #####
     
-  server <- function(input, output){
-    
     #### -------------------------------- SET UP THE CODE THAT ONLY NEEDS TO BE RUN ONCE ------------------------------------------------ ####
     
     # Append ISO3 codes to the map.word data to be able to merge long/lat polygon data with the other data frames 
@@ -182,7 +180,6 @@ server <- function(input, output){
       # generate the plot output
       ggplotly(myMap,tooltip = "text")
     })
-  }
 
     #### ------------------------------------ CREATE THE CODE TO PRODUCE RESULTS AFTER HOVERING OVER MAP WITH MOUSE ----------------------- ####
     
@@ -267,4 +264,4 @@ server <- function(input, output){
   
 } # close server
 
-shinyApp(ui = ui, server = server)
+#shinyApp(ui = ui, server = server)
