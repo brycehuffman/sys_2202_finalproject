@@ -337,7 +337,7 @@ createWorldMap <- function(name, year_input){
   
   myMap2<-ggplot() +
     geom_polygon_interactive(data = DataSource, aes(x = long, y = lat, group = group, fill = filler, tooltip = Country, data_id = region)) +
-    labs(title = paste(Start_year,name,sep = " "), subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."), caption = paste("source: ",Contributor)) +
+    labs(title = paste(year_input,name,sep = " "), subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."), caption = paste("source: ",Contributor)) +
     scale_fill_gradientn(name=name,
                          colours = brewer.pal(5, "RdYlBu"), 
                          na.value = 'white',
@@ -415,7 +415,7 @@ server <- function(input, output){
      if ("Male Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyMaleFinal)
      if ("Female Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyFemaleFinal)
      if ("Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityBTSXFinal)
-     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortailityFemaleFinal)
+     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityMaleFinal)
    })
    
