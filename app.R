@@ -1,19 +1,19 @@
 ##### LIBRARIES FROM UI #####
 
-if(!require(shiny)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
+if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
 
 ##### LIBRARIES FOR SERVER: SCATTERPLOT
 
-if(!require(dplyr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
-if(!require(ggvis)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(ggvis)) install.packages("ggvis", repos = "http://cran.us.r-project.org")
 
 
 ##### DATA PROCESSING (AS OF 4/13) #####
 
-if(!require(tidyr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
-if(!require(WDI)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
-if(!require(dplyr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
-if(!require(rvest)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
+if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
 
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1950, end = 2018)
 write.csv(gdp, 'gdp.csv', row.names = FALSE)
