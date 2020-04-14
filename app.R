@@ -135,9 +135,7 @@ ui <- fluidPage(
                           "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                             "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
                             ),
-                            selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
-                            selectInput("scale", "Choose a scale for world map:",
-                                        c("Normal","Logarithmic"), selected = "Normal")
+                            selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
       ),
       wellPanel(
         h4("Select Scatterplot Options"),
@@ -156,10 +154,11 @@ ui <- fluidPage(
       ),
       wellPanel(
         h4("Notes"),
-        tags$small(paste0(
-          "Insert Notes to User")
+        #tags$small(paste0(
+        #  "Insert Notes to User")
+        textOutput("data_source")
         )
-      )),
+      ),
       column(9, wellPanel( 
         h4("World Map Visualization"),
         plotlyOutput("mapPlot", width = 800, height = 500)),
@@ -339,7 +338,7 @@ createWorldMap <- function(name, year_input){
   
   myMap<-ggplot() +
     geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler,text = paste0("Country : ", region, "<br>","Value : ", as.integer(DataSource[,a])))) +
-    labs(title = paste(year_input,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale.") ,caption = paste("source: ",Contributor)) +
+    labs(title = paste(year_input,name,sep = " "),subtitle = paste(data_units,"(",plotType,"scale )") ,caption = paste("source: ",Contributor)) +
     scale_fill_gradientn(name=legend,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
                          breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
                          labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
@@ -362,7 +361,7 @@ createWorldMap <- function(name, year_input){
     layout(title = list(text = paste0(year_input," ",name,
                                       '<br>',
                                       '<sup>',
-                                      data_units," with colors displayed on a ",plotType," scale.",
+                                      data_units," (",plotType," scale)",
                                       '</sup>')))
   return(myMap2)
 }
@@ -416,7 +415,7 @@ server <- function(input, output){
     # output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
     # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
      output$mapPlot <- renderPlotly({createWorldMap(name(), Start_year())}) 
-
+     output$data_source <- renderText({paste("Map Datasource: ",setContributor(name()))})
   
 ## Reactive Scatterplot
   
