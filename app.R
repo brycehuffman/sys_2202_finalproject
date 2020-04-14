@@ -3,6 +3,7 @@
 if(!require(shiny)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
 
 ##### LIBRARIES FOR SERVER: SCATTERPLOT
+
 if(!require(dplyr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
 if(!require(ggvis)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
 
@@ -23,7 +24,7 @@ write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE)
 literacyFemale <- WDI(country = "all", indicator = "SE.ADT.LITR.FE.ZS", start = 1950, end = 2018)
 write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE)
 
-# Pull WHO data from API Query (not functional on 4/6/20)
+# Pull WHO data from API Query
 mortalityUnder5 <- read.csv(url("https://apps.who.int/gho/athena/api/GHO/MDG_0000000007?format=csv"))
 write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE)
 
@@ -140,16 +141,6 @@ ui <- fluidPage(
         )))
   )
 
-# column(4,
-#        wellPanel(
-#        
-# ),
-# column(8, offset = 4,
-#        h4("Scatterplot Visualization"),
-#        plotOutput(
-#          
-#        )
-#        )
 
 ##### FUNCTIONS #####
 
@@ -181,9 +172,9 @@ createScatterplot <- function(data){
 
 server <- function(input, output){
 
-## make a reactive scatterplot 
+## Reactive Scatterplot
   
-# x value of scatter
+  # setup reactive variable for x factor in UI
    scatter_x_reactive <- reactive({
      if ("Real GDP per Capita, 2010 US Dollars" %in% input$x_factor) return(gdpFinal)
      if ("Male Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyMaleFinal)
@@ -193,6 +184,7 @@ server <- function(input, output){
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityMaleFinal)
    })
    
+   # setup reactive variable for y factor in UI
    scatter_y_reactive<- reactive({
      if ("Real GDP per Capita, 2010 US Dollars" %in% input$y_factor) return(gdpFinal)
      if ("Male Literacy Rate, over 15 years old" %in% input$y_factor) return(literacyMaleFinal)
@@ -202,30 +194,31 @@ server <- function(input, output){
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
    })
   
-  # year of scatter
+  # year of scatterplot
+   
   scatter_year_reactive = reactive({
     format(input$year_scatter)
   })
-  # reactive data of scatter
+  
+  # reactive data join of scatter
   scatterDataReactive = reactive({
     scatterDataMerge(x = scatter_x_reactive(), y = scatter_y_reactive(), year = scatter_year_reactive())
   })
-  # create scatter plot output
   
+  # create scatter plot output
   vis <- reactive({
     createScatterplot(scatterDataReactive())
   })
   
+  # create scatterplot as ggvis object for Shiny UI
   vis %>% bind_shiny("scatter1")
-  # output$twofactorplot <- renderPlot({
-  #   createScatterplot(scatterDataReactive())
-  # })
 }
 
 
 ##### Run Shiny App #####
 
 shinyApp(ui = ui, server = server)
+
 # run in console with shiny::runApp("app.R")
 
 
