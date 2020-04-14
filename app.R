@@ -27,13 +27,13 @@ if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org"
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
 
-gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1950, end = 2018)
+gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1980, end = 2018)
 write.csv(gdp, 'gdp.csv', row.names = FALSE)
 
-literacyMale <- WDI(country = "all", indicator = "SE.ADT.LITR.MA.ZS", start = 1950, end = 2018)
+literacyMale <- WDI(country = "all", indicator = "SE.ADT.LITR.MA.ZS", start = 1980, end = 2018)
 write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE)
 
-literacyFemale <- WDI(country = "all", indicator = "SE.ADT.LITR.FE.ZS", start = 1950, end = 2018)
+literacyFemale <- WDI(country = "all", indicator = "SE.ADT.LITR.FE.ZS", start = 1980, end = 2018)
 write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE)
 
 # Pull WHO data from API Query
@@ -135,13 +135,13 @@ ui <- fluidPage(
                           "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                             "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
                             ),
-                            textInput("year_map", "Choose a year between 1950 and 2019:", value = "2018"),
+                            selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
                             selectInput("scale", "Choose a scale for world map:",
                                         c("Normal","Logarithmic"), selected = "Normal")
       ),
       wellPanel(
         h4("Select Scatterplot Options"),
-        textInput("year_scatter", "Choose a year between 1950 and 2019:", value = "2018"),
+        selectizeInput("year_scatter", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
         selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
@@ -157,7 +157,7 @@ ui <- fluidPage(
       wellPanel(
         h4("Notes"),
         tags$small(paste0(
-          "<><><><><><><this is a place to add notes><><><><><><>")
+          "Insert Notes to User")
         )
       )),
       column(9, wellPanel( 
