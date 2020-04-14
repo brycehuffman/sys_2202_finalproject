@@ -163,6 +163,8 @@ ui <- fluidPage(
       column(9, wellPanel( 
         h4("World Map Visualization"),
         plotOutput("mapPlot")),
+        # ggiraphOutput("intMapPlot")), for interactive plot
+        
         wellPanel(
           h4("Scatterplot Visualization"), 
           ggvisOutput("scatter1")
@@ -355,6 +357,7 @@ createWorldMap <- function(name, year_input){
           ,legend.position = "right"
           ,legend.background = element_rect(fill = "#444444")
     )
+  # for interactive plot myMap2<- ggiraph(code = print(myMap2),tooltip_offx = 20, tooltip_offy = -10,width_svg = 10,height_svg = 6,zoom_max = 4)
   return(myMap2)
 }
 
@@ -404,7 +407,8 @@ server <- function(input, output){
   })
 
   # create World Map Plot Output
-  output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
+    output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
+    # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
   
   
 ## Reactive Scatterplot
