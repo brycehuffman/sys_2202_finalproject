@@ -1,6 +1,6 @@
 ##### Packages #####
 library(ggplot2) # required for 2 dataframe scatterplot
-library(ggvis)
+library(ggvis) 
 
 # required for world map
 library(ggmap)        
@@ -55,23 +55,23 @@ server <- function(input, output){
           data_units = "number of male children under 5 who died per 1000 live births"
           legend = "mortality rate"
         }else{
-          if(name=="Real GDP per Capita, 2010 US Dollars"){
+          if(name=="Real GDP per Capita"){
             DataSource = map.world_joined
             Contributor = "World Bank"
-            data_units = "GDP in US dollars per capita"
+            data_units = "GDP in 2010 US dollars per capita"
             legend = "GDP per capita"
           }else{
             if(name=="Female Literacy Rate, over 15 years old"){
               DataSource = map.world_joined3
               Contributor = "World Bank"
               data_units = "percent of females who are literate"
-              legend = "% female literacy"
+              legend = "female literacy rate"
             }else{
               if(name=="Male Literacy Rate, over 15 years old"){
                 DataSource = map.world_joined2
                 Contributor = "World Bank"
                 data_units = "percent of males who are literate"
-                legend = "% male literacy"
+                legend = "male literacy rate"
               }
             }
           }
@@ -91,12 +91,14 @@ server <- function(input, output){
       
       if(name=="Real GDP per Capita, 2010 US Dollars"){
         filler = DataSource$lnfactors
+        plotType = "logarithmic"
       }else{
-        filler = DataSource$factors}
+        filler = DataSource$factors
+        plotType = "linear"}
       
       # See what Type of plot you are using -- (Could be replaced by just a name check but who knows if you'll need it later)
-      ln = na.omit(ifelse(filler==DataSource$factors,"linear","logarithmic"))
-      plotType = ln[1]
+      #ln = na.omit(ifelse(filler==DataSource$factors,"linear","logarithmic"))
+      #plotType = ln[1]
       
       # Calculate the scale to customize the legend used in the Map
       max_n = max(na.omit(filler))
@@ -159,8 +161,8 @@ server <- function(input, output){
       lab6 = max_value
       
       myMap<-ggplot() +
-        geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler, text = paste("Country: ", region, "<br>", legend, as.integer(DataSource[,a])))) +
-        labs(title = paste(Start_year,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale."),caption = paste("source: ",Contributor)) +
+        geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler,text = paste0("Country : ", region, "<br>","Value : ", as.integer(DataSource[,a])))) +
+        labs(title = paste(Start_year,name,sep = " "),subtitle = paste(data_units,"with colors displayed on a ",plotType,"scale.") ,caption = paste("source: ",Contributor)) +
         scale_fill_gradientn(name=legend,colours = brewer.pal(5, "RdYlBu"), na.value = 'white',
                              breaks=c(tick0,tick1,tick2,tick3,tick4,tick5,tick6),
                              labels=c(lab0,lab1,lab2,lab3,lab4,lab5,lab6)) +
@@ -178,9 +180,15 @@ server <- function(input, output){
         )
       
       # generate the plot output
-      ggplotly(myMap,tooltip = "text")
+      ggplotly(myMap,tooltip = "text") %>%
+        # get the subtitle and title for the plot
+        layout(title = list(text = paste0(Start_year," ",name,
+                                          '<br>',
+                                          '<sup>',
+                                          data_units," with colors displayed on a ",plotType," scale.",
+                                          '</sup>')))
+        
     })
-
     #### ------------------------------------ CREATE THE CODE TO PRODUCE RESULTS AFTER HOVERING OVER MAP WITH MOUSE ----------------------- ####
     
     output$hover_info <- renderUI({
