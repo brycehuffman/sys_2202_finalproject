@@ -121,6 +121,7 @@ map.world_joined2<-left_join(map.world,literacyMaleFinal,by=c('ISO'='ISO3'))    
 map.world_joined3<-left_join(map.world,literacyFemaleFinal,by=c('ISO'='ISO3'))       # Female Literacy 
 map.world_joined4<-left_join(map.world,mortalityMaleFinal,by=c('ISO'='ISO3'))        # Male Mortality
 map.world_joined5<-left_join(map.world,mortalityFemaleFinal,by=c('ISO'='ISO3'))      # Female Mortality
+map.world_joined6<-left_join(map.world,mortalityBTSXFinal,by=c('ISO'='ISO3'))        # Both Sex Mortality
 
 
 ##### UI: USER INTERFACE FOR R SHINY (AS OF 4/13) #####
@@ -191,6 +192,10 @@ setDataSource <- function(name){
         }else{
           if(name=="Male Literacy"){
             return(map.world_joined2)
+          }else{
+            if(name=="Overall Mortality"){
+              return(map.world_joined6)
+            }
           }
         }
       }
@@ -215,6 +220,10 @@ setContributor <- function(name){
         }else{
           if(name=="Male Literacy"){
             return("World Bank")
+          }else{
+            if(name=="Overall Mortality"){
+              return("World Health Organization")
+            }
           }
         }
       }
@@ -239,6 +248,10 @@ setData_Units <- function(name){
         }else{
           if(name=="Male Literacy"){
             return("percent of males who are literate")
+          }else{
+            if(name=="Overall Mortality"){
+              return("number of children under 5 who died per 1000 live births")
+            }
           }
         }
       }
