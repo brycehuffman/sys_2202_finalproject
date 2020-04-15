@@ -20,28 +20,39 @@ if(!require(ggiraph)) install.packages("ggiraph", repos = "http://cran.us.r-proj
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
 
-##### DATA PROCESSING (AS OF 4/13) #####
+##### DATA PROCESSING #####
 
 if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
 if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org")
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
 
+# World Bank data from API Query with WDI Package: GDP DATA
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1980, end = 2018)
-write.csv(gdp, 'gdp.csv', row.names = FALSE)
+write.csv(gdp, 'gdp.csv', row.names = FALSE) # save raw data to csv
 
+# World Bank data from API Query with WDI Package: MALE LITERACY DATA
 literacyMale <- WDI(country = "all", indicator = "SE.ADT.LITR.MA.ZS", start = 1980, end = 2018)
-write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE)
+write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE) # save raw data to csv
 
+# World Bank data from API Query with WDI Package: FEMALE LITERACY DATA
 literacyFemale <- WDI(country = "all", indicator = "SE.ADT.LITR.FE.ZS", start = 1980, end = 2018)
-write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE)
+write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE) # save raw data to csv
 
-# Pull WHO data from API Query
+# Pull WHO data from API Query: MORTALITY UNDER AGE 5 DATA
 mortalityUnder5 <- read.csv(url("https://apps.who.int/gho/athena/api/GHO/MDG_0000000007?format=csv"))
-write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE)
+write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE) # save raw data to csv
+ 
+# Backup Read from CSV (for presentation purposes due to API server outages)
+# Rely on API - To only be used during presentation if website is down
+
+# gdp <- read.csv("gdp.csv")
+# literacyMale <- read.csv("literacyMale.csv")
+# literacyFemale <- read.csv("literacyFemale.csv")
+# mortalityUnder5 <- read.csv("mortalityUnder5.csv")
 
 ##### Cleaning of World Bank Data ####
-##### GDP, Literacy Male, Literacy Female #####
+## GDP, Literacy Male, Literacy Female
 
 # Change Column Names
 names(gdp)[3] <- "RealGDP"
@@ -63,6 +74,7 @@ mortalityUnder5Clean <- mortalityUnder5 %>% mutate(mortalityValue = replace(mort
 ## drop columns
 mortalityColDel <- c("GHO", "PUBLISHSTATE", "REGION", "Display.Value", "Low", "High", "Comments")
 mortalityUnder5Clean <- select(mortalityUnder5Clean, -mortalityColDel)
+
 # create list of country codes for table joining
 
 url <- "https://www.nationsonline.org/oneworld/country_code_list.htm"
@@ -85,9 +97,9 @@ mortalityUnder5Join <- inner_join(iso_codes, mortalityUnder5Clean, by = c("ISO3"
 
 ## Mortality Data by Gender
 
-mortalityFemaleJoin <- filter(mortalityUnder5Join, SEX == "FMLE")
-mortalityMaleJoin<- filter(mortalityUnder5Join, SEX == "MLE")
-mortalityBTSXJoin <- filter(mortalityUnder5Join, SEX == "BTSX")
+mortalityFemaleJoin <- filter(mortalityUnder5Join, SEX == "FMLE") # female
+mortalityMaleJoin<- filter(mortalityUnder5Join, SEX == "MLE") # male
+mortalityBTSXJoin <- filter(mortalityUnder5Join, SEX == "BTSX") # both sexes
 
 ## Get a cleaned up table that has the years as attributes
 
@@ -155,8 +167,7 @@ ui <- fluidPage(
       ),
       wellPanel(
         h4("Notes"),
-        #tags$small(paste0(
-        #  "Insert Notes to User")
+        p("Map may take a few moments to load."),
         textOutput("data_source")
         )
       ),
