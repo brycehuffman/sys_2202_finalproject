@@ -156,12 +156,14 @@ ui <- fluidPage(
         selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+                    selected = "Female Literacy Rate, over 15 years old"
         ),
         selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+                    selected = "Male Literacy Rate, over 15 years old"
         )
         
       ),
@@ -405,14 +407,17 @@ scatterDataMerge <- function(x, y, year) {
   return(joinedTable)
 }
 
-createScatterplot <- function(data){
+createScatterplot <- function(data, xName, yName){
   # creates a scatterplot from table with x and y columns
   plot <- data %>%
     ggvis(~x, ~y) %>%
-    layer_points() %>%
-    add_axis("x", title = "x title here") %>% add_axis("y", title = "y title here") %>%
+    # scale_numeric("x", trans = "log", expand = 0, nice = TRUE) %>%
+    layer_points(fillOpacity := 0.45, size := 50) %>% 
+    add_axis("x", title = toString(xName), properties = axis_props(title = list(dy = 25))) %>% 
+    add_axis("y", title = toString(yName), properties = axis_props(title = list(dy = -30))) %>%
     set_options(width = 500, height = 500) %>% layer_smooths()
 }
+
 
 ##### SERVER (from scratch) #####
 
@@ -462,9 +467,15 @@ server <- function(input, output){
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
    })
-  
-  # year of scatterplot
    
+   # setup reactive variable for x axis label in scatterplot
+   scatter_x_reactive_label <- reactive({input$x_factor})
+   
+   # setup reactive variable for y axis label in scatterplot
+   scatter_y_reactive_label <- reactive({input$y_factor})
+   
+   
+  # year of scatterplot
   scatter_year_reactive = reactive({
     format(input$year_scatter)
   })
@@ -476,7 +487,7 @@ server <- function(input, output){
   
   # create scatter plot output
   vis <- reactive({
-    createScatterplot(scatterDataReactive())
+    createScatterplot(scatterDataReactive(), scatter_x_reactive_label(), scatter_y_reactive_label())
   })
   
   # create scatterplot as ggvis object for Shiny UI
