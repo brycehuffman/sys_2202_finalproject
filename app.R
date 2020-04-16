@@ -144,15 +144,26 @@ map.world_joined6<-left_join(map.world,mortalityBTSXFinal,by=c('ISO'='ISO3'))   
 ui <- fluidPage(
   titlePanel("Health and Economic Factors Visualization"),
     fluidRow(
-      column(3, wellPanel(  
+      column(4,
+             br(),
+             br(),
+        wellPanel(
+               h4("Welcome!"),
+               p("Use corresponding option menus for each plot."),
+              p("Hover over countries in the world map or points on the scatterplot for more information.")
+             ),
+        br(),
+        wellPanel(  
         h4("Select World Map Options"),
-            selectInput("map_factor", "Choose a factor for world map visualization.",
+            selectInput("map_factor", "Choose a factor for world map visualization",
                          c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                           "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                             "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
                             ),
                             selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
       ),
+      br(),
+      br(),
       wellPanel(
         h4("Select Scatterplot Options"),
         selectizeInput("year_scatter", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
@@ -176,9 +187,9 @@ ui <- fluidPage(
         textOutput("data_source")
         )
       ),
-      column(9, wellPanel( 
+      column(8, align = "center", wellPanel( 
         h4("World Map Visualization"),
-        plotlyOutput("mapPlot", width = 800, height = 500)),
+        plotlyOutput("mapPlot", width = 650, height = 406)),
         # ggiraphOutput("intMapPlot")), for interactive plot
         
         wellPanel(
@@ -404,6 +415,7 @@ scatterDataMerge <- function(x, y, year) {
   y_data <- y %>% select(c("ISO2", toString(year))) # selects correct year and all countries
   head(y_data)
   joinedTable <- inner_join(x_data, y_data, by = c("ISO2" = "ISO2"))
+  colnames(joinedTable)[1] = "i"
   colnames(joinedTable)[2] = "x"
   colnames(joinedTable)[3] = "y"
   joinedTable <- joinedTable %>% mutate(x = replace(x, is.na(x), -1)) %>% filter(x != -1) %>% mutate(y=replace(y, is.na(y), -1)) %>% filter(y != -1)
@@ -418,8 +430,17 @@ createScatterplot <- function(data, xName, yName){
     layer_points(fillOpacity := 0.45, size := 50) %>% 
     add_axis("x", title = toString(xName), properties = axis_props(title = list(dy = 25))) %>% 
     add_axis("y", title = toString(yName), properties = axis_props(title = list(dy = -30))) %>%
-    set_options(width = 500, height = 500) %>% layer_smooths()
+    add_axis("x", orient = "top", ticks = 0, title = toString(paste(yName, "vs.")), properties = axis_props(title = list(fontSize = 14))) %>%
+    add_axis("x", orient = "top", ticks = 0, title = toString(xName), properties = axis_props(title = list(fontSize = 14, dy=18))) %>%
+    set_options(width = 500, height = 500) %>% layer_smooths() %>%
+    set_options(keep_aspect = TRUE) %>%
+    add_tooltip(function(data){
+    paste0("Country", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
+  }, "hover") 
 }
+
+# all_countries <- isolate(data)
+# id <- all_countries[all_countries$ISO2 == x$ISO2, ]
 
 
 ##### SERVER (from scratch) #####
