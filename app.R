@@ -1,3 +1,5 @@
+#### Run note: this application peaks around 1.3 gb of ram ####
+
 ##### LIBRARIES FROM UI #####
 
 if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
@@ -6,7 +8,6 @@ if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.
 
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
 if(!require(ggvis)) install.packages("ggvis", repos = "http://cran.us.r-project.org")
-
 
 ##### LIBRARIES FOR SERVER: WORLDMAP
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
@@ -19,6 +20,8 @@ if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-proj
 if(!require(ggiraph)) install.packages("ggiraph", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
+if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org")
+
 
 ##### DATA PROCESSING #####
 
