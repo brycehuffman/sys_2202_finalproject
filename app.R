@@ -1,3 +1,5 @@
+#### Run note: this application peaks around 1.3 gb of ram ####
+
 ##### LIBRARIES FROM UI #####
 
 if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
@@ -18,29 +20,42 @@ if(!require(countrycode)) install.packages("countrycode", repos = "http://cran.u
 if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
+if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org")
 
-##### DATA PROCESSING (AS OF 4/13) #####
+
+##### DATA PROCESSING #####
 
 if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
 if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org")
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
 
+# World Bank data from API Query with WDI Package: GDP DATA
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1980, end = 2018)
-write.csv(gdp, 'gdp.csv', row.names = FALSE)
+write.csv(gdp, 'gdp.csv', row.names = FALSE) # save raw data to csv
 
+# World Bank data from API Query with WDI Package: MALE LITERACY DATA
 literacyMale <- WDI(country = "all", indicator = "SE.ADT.LITR.MA.ZS", start = 1980, end = 2018)
-write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE)
+write.csv(literacyMale, 'literacyMale.csv', row.names = FALSE) # save raw data to csv
 
+# World Bank data from API Query with WDI Package: FEMALE LITERACY DATA
 literacyFemale <- WDI(country = "all", indicator = "SE.ADT.LITR.FE.ZS", start = 1980, end = 2018)
-write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE)
+write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE) # save raw data to csv
 
-# Pull WHO data from API Query
+# Pull WHO data from API Query: MORTALITY UNDER AGE 5 DATA
 mortalityUnder5 <- read.csv(url("https://apps.who.int/gho/athena/api/GHO/MDG_0000000007?format=csv"))
-write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE)
+write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE) # save raw data to csv
+ 
+# Backup Read from CSV (for presentation purposes due to API server outages)
+# Rely on API - To only be used during presentation if website is down
+
+# gdp <- read.csv("gdp.csv")
+# literacyMale <- read.csv("literacyMale.csv")
+# literacyFemale <- read.csv("literacyFemale.csv")
+# mortalityUnder5 <- read.csv("mortalityUnder5.csv")
 
 ##### Cleaning of World Bank Data ####
-##### GDP, Literacy Male, Literacy Female #####
+## GDP, Literacy Male, Literacy Female
 
 # Change Column Names
 names(gdp)[3] <- "RealGDP"
@@ -62,6 +77,7 @@ mortalityUnder5Clean <- mortalityUnder5 %>% mutate(mortalityValue = replace(mort
 ## drop columns
 mortalityColDel <- c("GHO", "PUBLISHSTATE", "REGION", "Display.Value", "Low", "High", "Comments")
 mortalityUnder5Clean <- select(mortalityUnder5Clean, -mortalityColDel)
+
 # create list of country codes for table joining
 
 url <- "https://www.nationsonline.org/oneworld/country_code_list.htm"
@@ -84,9 +100,9 @@ mortalityUnder5Join <- inner_join(iso_codes, mortalityUnder5Clean, by = c("ISO3"
 
 ## Mortality Data by Gender
 
-mortalityFemaleJoin <- filter(mortalityUnder5Join, SEX == "FMLE")
-mortalityMaleJoin<- filter(mortalityUnder5Join, SEX == "MLE")
-mortalityBTSXJoin <- filter(mortalityUnder5Join, SEX == "BTSX")
+mortalityFemaleJoin <- filter(mortalityUnder5Join, SEX == "FMLE") # female
+mortalityMaleJoin<- filter(mortalityUnder5Join, SEX == "MLE") # male
+mortalityBTSXJoin <- filter(mortalityUnder5Join, SEX == "BTSX") # both sexes
 
 ## Get a cleaned up table that has the years as attributes
 
@@ -128,40 +144,52 @@ map.world_joined6<-left_join(map.world,mortalityBTSXFinal,by=c('ISO'='ISO3'))   
 ui <- fluidPage(
   titlePanel("Health and Economic Factors Visualization"),
     fluidRow(
-      column(3, wellPanel(  
+      column(4,
+             br(),
+             br(),
+        wellPanel(
+               h4("Welcome!"),
+               p("Use corresponding option menus for each plot."),
+              p("Hover over countries in the world map or points on the scatterplot for more information.")
+             ),
+        br(),
+        wellPanel(  
         h4("Select World Map Options"),
-            selectInput("map_factor", "Choose a factor for world map visualization.",
+            selectInput("map_factor", "Choose a factor for world map visualization",
                          c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                           "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                             "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
                             ),
                             selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
       ),
+      br(),
+      br(),
       wellPanel(
         h4("Select Scatterplot Options"),
         selectizeInput("year_scatter", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
         selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+                    selected = "Female Literacy Rate, over 15 years old"
         ),
         selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+                    selected = "Male Literacy Rate, over 15 years old"
         )
         
       ),
       wellPanel(
         h4("Notes"),
-        #tags$small(paste0(
-        #  "Insert Notes to User")
+        p("Map may take a few moments to load."),
         textOutput("data_source")
         )
       ),
-      column(9, wellPanel( 
+      column(8, align = "center", wellPanel( 
         h4("World Map Visualization"),
-        plotlyOutput("mapPlot", width = 800, height = 500)),
+        plotlyOutput("mapPlot", width = 650, height = 406)),
         # ggiraphOutput("intMapPlot")), for interactive plot
         
         wellPanel(
@@ -380,20 +408,33 @@ scatterDataMerge <- function(x, y, year) {
   y_data <- y %>% select(c("ISO2", toString(year))) # selects correct year and all countries
   head(y_data)
   joinedTable <- inner_join(x_data, y_data, by = c("ISO2" = "ISO2"))
+  colnames(joinedTable)[1] = "i"
   colnames(joinedTable)[2] = "x"
   colnames(joinedTable)[3] = "y"
   joinedTable <- joinedTable %>% mutate(x = replace(x, is.na(x), -1)) %>% filter(x != -1) %>% mutate(y=replace(y, is.na(y), -1)) %>% filter(y != -1)
   return(joinedTable)
 }
 
-createScatterplot <- function(data){
+createScatterplot <- function(data, xName, yName){
   # creates a scatterplot from table with x and y columns
   plot <- data %>%
     ggvis(~x, ~y) %>%
-    layer_points() %>%
-    add_axis("x", title = "x title here") %>% add_axis("y", title = "y title here") %>%
-    set_options(width = 500, height = 500) %>% layer_smooths()
+    # scale_numeric("x", trans = "log", expand = 0, nice = TRUE) %>%
+    layer_points(fillOpacity := 0.45, size := 50) %>% 
+    add_axis("x", title = toString(xName), properties = axis_props(title = list(dy = 25))) %>% 
+    add_axis("y", title = toString(yName), properties = axis_props(title = list(dy = -30))) %>%
+    add_axis("x", orient = "top", ticks = 0, title = toString(paste(yName, "vs.")), properties = axis_props(title = list(fontSize = 14))) %>%
+    add_axis("x", orient = "top", ticks = 0, title = toString(xName), properties = axis_props(title = list(fontSize = 14, dy=18))) %>%
+    set_options(width = 500, height = 500) %>% layer_smooths() %>%
+    set_options(keep_aspect = TRUE) %>%
+    add_tooltip(function(data){
+    paste0("Country", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
+  }, "hover") 
 }
+
+# all_countries <- isolate(data)
+# id <- all_countries[all_countries$ISO2 == x$ISO2, ]
+
 
 ##### SERVER (from scratch) #####
 
@@ -443,9 +484,15 @@ server <- function(input, output){
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
    })
-  
-  # year of scatterplot
    
+   # setup reactive variable for x axis label in scatterplot
+   scatter_x_reactive_label <- reactive({input$x_factor})
+   
+   # setup reactive variable for y axis label in scatterplot
+   scatter_y_reactive_label <- reactive({input$y_factor})
+   
+   
+  # year of scatterplot
   scatter_year_reactive = reactive({
     format(input$year_scatter)
   })
@@ -457,7 +504,7 @@ server <- function(input, output){
   
   # create scatter plot output
   vis <- reactive({
-    createScatterplot(scatterDataReactive())
+    createScatterplot(scatterDataReactive(), scatter_x_reactive_label(), scatter_y_reactive_label())
   })
   
   # create scatterplot as ggvis object for Shiny UI
