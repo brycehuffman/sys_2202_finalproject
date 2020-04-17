@@ -166,19 +166,21 @@ ui <- fluidPage(
       br(),
       wellPanel(
         h4("Select Scatterplot Options"),
-        selectizeInput("year_scatter", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
-        selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
-                    c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
-                      "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
-                    selected = "Female Literacy Rate, over 15 years old"
-        ),
+        # selectizeInput("year_map"),
+        # selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
+        #             c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
+        #               "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
+        #               "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+        #             selected = "Female Literacy Rate, over 15 years old"
+        # ),
+        
         selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                       "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
                     selected = "Male Literacy Rate, over 15 years old"
-        )
+        ),
+        p("Note: Both the year and x-axis are represented by the factors selected for the World Map."),
         
       ),
       wellPanel(
@@ -402,12 +404,12 @@ createWorldMap <- function(name, year_input){
 ## Functions for scatterplot
 
 scatterDataMerge <- function(x, y, year) {
-  # joins final data tables on country code for year given
-  x_data <- x %>% select(c("ISO2", toString(year))) # selects correct year and all countries
+  # joins final data tables on country for year given
+  x_data <- x %>% select(c("Country", toString(year))) # selects correct year and all countries
   head(x_data)
-  y_data <- y %>% select(c("ISO2", toString(year))) # selects correct year and all countries
+  y_data <- y %>% select(c("Country", toString(year))) # selects correct year and all countries
   head(y_data)
-  joinedTable <- inner_join(x_data, y_data, by = c("ISO2" = "ISO2"))
+  joinedTable <- inner_join(x_data, y_data, by = c("Country" = "Country"))
   colnames(joinedTable)[1] = "i"
   colnames(joinedTable)[2] = "x"
   colnames(joinedTable)[3] = "y"
@@ -426,11 +428,15 @@ createScatterplot <- function(data, xName, yName){
     add_axis("x", orient = "top", ticks = 0, title = toString(paste(yName, "vs.")), properties = axis_props(title = list(fontSize = 14))) %>%
     add_axis("x", orient = "top", ticks = 0, title = toString(xName), properties = axis_props(title = list(fontSize = 14, dy=18))) %>%
     set_options(width = 500, height = 500) %>% layer_smooths() %>%
-    set_options(keep_aspect = TRUE) %>%
-    add_tooltip(function(data){
-    paste0("Country", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
-  }, "hover") 
-}
+    set_options(keep_aspect = TRUE) 
+  }
+    #add_tooltip(function(data) {
+     # Datapoint <- data[data, c("i", "x", "y")]
+      # paste0(as.character(Datapoint), "test")
+  #   add_tooltip(function(data){
+  #   paste0("Country: ", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
+  # }, "hover")
+
 
 # all_countries <- isolate(data)
 # id <- all_countries[all_countries$ISO2 == x$ISO2, ]
@@ -466,13 +472,14 @@ server <- function(input, output){
 ## Reactive Scatterplot
   
   # setup reactive variable for x factor in UI
+  # matches factor displayed from world map
    scatter_x_reactive <- reactive({
-     if ("Real GDP per Capita, 2010 US Dollars" %in% input$x_factor) return(gdpFinal)
-     if ("Male Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyMaleFinal)
-     if ("Female Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyFemaleFinal)
-     if ("Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityBTSXFinal)
-     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityFemaleFinal)
-     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityMaleFinal)
+     if ("Real GDP per Capita, 2010 US Dollars" %in% input$map_factor) return(gdpFinal)
+     if ("Male Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyMaleFinal)
+     if ("Female Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyFemaleFinal)
+     if ("Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityBTSXFinal)
+     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityFemaleFinal)
+     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityMaleFinal)
    })
    
    # setup reactive variable for y factor in UI
@@ -486,16 +493,15 @@ server <- function(input, output){
    })
    
    # setup reactive variable for x axis label in scatterplot
-   scatter_x_reactive_label <- reactive({input$x_factor})
+   # matches factor displayed from world map
+   scatter_x_reactive_label <- reactive({input$map_factor})
    
    # setup reactive variable for y axis label in scatterplot
    scatter_y_reactive_label <- reactive({input$y_factor})
    
    
-  # year of scatterplot
-  scatter_year_reactive = reactive({
-    format(input$year_scatter)
-  })
+  # year of scatterplot, Same year as world map
+  scatter_year_reactive = Start_year
   
   # reactive data join of scatter
   scatterDataReactive = reactive({
