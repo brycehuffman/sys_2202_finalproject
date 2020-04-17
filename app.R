@@ -437,8 +437,8 @@ createScatterplot <- function(data, xName, yName){
     set_options(width = 500, height = 500) %>% layer_smooths() %>%
     set_options(keep_aspect = TRUE) %>%
     add_tooltip(function(data){
-    paste0("Country", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
-  }, "hover") 
+    paste0("Country: ", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
+  }, "hover")
 }
 
 # all_countries <- isolate(data)
