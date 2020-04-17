@@ -475,6 +475,7 @@ server <- function(input, output){
 ## Reactive Scatterplot
   
   # setup reactive variable for x factor in UI
+  # matches factor displayed from world map
    scatter_x_reactive <- reactive({
      if ("Real GDP per Capita, 2010 US Dollars" %in% input$map_factor) return(gdpFinal)
      if ("Male Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyMaleFinal)
@@ -495,13 +496,14 @@ server <- function(input, output){
    })
    
    # setup reactive variable for x axis label in scatterplot
+   # matches factor displayed from world map
    scatter_x_reactive_label <- reactive({input$map_factor})
    
    # setup reactive variable for y axis label in scatterplot
    scatter_y_reactive_label <- reactive({input$y_factor})
    
    
-  # year of scatterplot
+  # year of scatterplot, Same year as world map
   scatter_year_reactive = Start_year
   #   reactive({
   #   format(input$year_map)
