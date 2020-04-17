@@ -411,12 +411,12 @@ createWorldMap <- function(name, year_input){
 ## Functions for scatterplot
 
 scatterDataMerge <- function(x, y, year) {
-  # joins final data tables on country code for year given
-  x_data <- x %>% select(c("ISO2", toString(year))) # selects correct year and all countries
+  # joins final data tables on country for year given
+  x_data <- x %>% select(c("Country", toString(year))) # selects correct year and all countries
   head(x_data)
-  y_data <- y %>% select(c("ISO2", toString(year))) # selects correct year and all countries
+  y_data <- y %>% select(c("Country", toString(year))) # selects correct year and all countries
   head(y_data)
-  joinedTable <- inner_join(x_data, y_data, by = c("ISO2" = "ISO2"))
+  joinedTable <- inner_join(x_data, y_data, by = c("Country" = "Country"))
   colnames(joinedTable)[1] = "i"
   colnames(joinedTable)[2] = "x"
   colnames(joinedTable)[3] = "y"
@@ -435,11 +435,15 @@ createScatterplot <- function(data, xName, yName){
     add_axis("x", orient = "top", ticks = 0, title = toString(paste(yName, "vs.")), properties = axis_props(title = list(fontSize = 14))) %>%
     add_axis("x", orient = "top", ticks = 0, title = toString(xName), properties = axis_props(title = list(fontSize = 14, dy=18))) %>%
     set_options(width = 500, height = 500) %>% layer_smooths() %>%
-    set_options(keep_aspect = TRUE) %>%
-    add_tooltip(function(data){
-    paste0("Country: ", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
-  }, "hover")
-}
+    set_options(keep_aspect = TRUE) 
+  }
+    #add_tooltip(function(data) {
+     # Datapoint <- data[data, c("i", "x", "y")]
+      # paste0(as.character(Datapoint), "test")
+  #   add_tooltip(function(data){
+  #   paste0("Country: ", "<br>", "X: ", as.character(data$x), "<br>", "Y: ", as.character(data$y))
+  # }, "hover")
+
 
 # all_countries <- isolate(data)
 # id <- all_countries[all_countries$ISO2 == x$ISO2, ]
@@ -505,9 +509,6 @@ server <- function(input, output){
    
   # year of scatterplot, Same year as world map
   scatter_year_reactive = Start_year
-  #   reactive({
-  #   format(input$year_map)
-  # })
   
   # reactive data join of scatter
   scatterDataReactive = reactive({
