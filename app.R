@@ -166,19 +166,21 @@ ui <- fluidPage(
       br(),
       wellPanel(
         h4("Select Scatterplot Options"),
-        selectizeInput("year_scatter", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000),
-        selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
-                    c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
-                      "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
-                    selected = "Female Literacy Rate, over 15 years old"
-        ),
+        # selectizeInput("year_map"),
+        # selectInput("x_factor", "Choose a factor for the x-axis of the scatter plot",
+        #             c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
+        #               "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
+        #               "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+        #             selected = "Female Literacy Rate, over 15 years old"
+        # ),
+        
         selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
                       "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
                     selected = "Male Literacy Rate, over 15 years old"
-        )
+        ),
+        p("Note: Both the year and x-axis are represented by the factors selected for the World Map."),
         
       ),
       wellPanel(
@@ -474,12 +476,12 @@ server <- function(input, output){
   
   # setup reactive variable for x factor in UI
    scatter_x_reactive <- reactive({
-     if ("Real GDP per Capita, 2010 US Dollars" %in% input$x_factor) return(gdpFinal)
-     if ("Male Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyMaleFinal)
-     if ("Female Literacy Rate, over 15 years old" %in% input$x_factor) return(literacyFemaleFinal)
-     if ("Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityBTSXFinal)
-     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityFemaleFinal)
-     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$x_factor) return(mortalityMaleFinal)
+     if ("Real GDP per Capita, 2010 US Dollars" %in% input$map_factor) return(gdpFinal)
+     if ("Male Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyMaleFinal)
+     if ("Female Literacy Rate, over 15 years old" %in% input$map_factor) return(literacyFemaleFinal)
+     if ("Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityBTSXFinal)
+     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityFemaleFinal)
+     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityMaleFinal)
    })
    
    # setup reactive variable for y factor in UI
@@ -493,16 +495,17 @@ server <- function(input, output){
    })
    
    # setup reactive variable for x axis label in scatterplot
-   scatter_x_reactive_label <- reactive({input$x_factor})
+   scatter_x_reactive_label <- reactive({input$map_factor})
    
    # setup reactive variable for y axis label in scatterplot
    scatter_y_reactive_label <- reactive({input$y_factor})
    
    
   # year of scatterplot
-  scatter_year_reactive = reactive({
-    format(input$year_scatter)
-  })
+  scatter_year_reactive = Start_year
+  #   reactive({
+  #   format(input$year_map)
+  # })
   
   # reactive data join of scatter
   scatterDataReactive = reactive({
