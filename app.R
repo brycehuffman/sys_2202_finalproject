@@ -106,6 +106,15 @@ names(literacyMale)[3] <- "LiteracyMale"
 names(mortalityUnder5)[5] <- "iso3"
 names(mortalityUnder5)[8] <- "mortalityValue"
 names(mortalityUnder5)[3] <- "year"
+names(expectancyFemale)[3] <- "ExpectancyFemale"
+names(expectancyMale)[3] <- "ExpectancyMale"
+names(expectancyTotal)[3] <- "ExpectancyTotal"
+names(waterAccess)[3] <- "WaterAccess"
+names(serviceGDP)[3] <- "ServiceGDP"
+names(tradeGDP)[3] <- "TradeGDP"
+names(capitaGDP)[3] <- "CapitaGDP"
+names(overallGDP)[3] <- "OverallGDP"
+
 
 ## remove rows with NA values
 # set na values to -1
@@ -115,6 +124,17 @@ gdpClean <- gdp %>% mutate(RealGDP = replace(RealGDP, is.na(RealGDP), -1)) %>% f
 literacyFemaleClean <- literacyFemale %>% mutate(LiteracyFemale = replace(LiteracyFemale, is.na(LiteracyFemale), -1))%>% filter(LiteracyFemale != -1)
 literacyMaleClean <- literacyMale %>% mutate(LiteracyMale = replace(LiteracyMale, is.na(LiteracyMale), -1)) %>% filter(LiteracyMale != -1)
 mortalityUnder5Clean <- mortalityUnder5 %>% mutate(mortalityValue = replace(mortalityValue, is.na(mortalityValue), -1)) %>% filter(mortalityValue != -1)
+expectancyFemaleClean <- expectancyFemale %>% mutate(ExpectancyFemale = replace(ExpectancyFemale, is.na(ExpectancyFemale), -1)) %>% filter(ExpectancyFemale != -1)
+expectancyMaleClean <- expectancyMale %>% mutate(ExpectancyMale = replace(ExpectancyMale, is.na(ExpectancyMale), -1)) %>% filter(ExpectancyMale != -1)
+expectancyTotalClean <- expectancyTotal %>% mutate(ExpectancyTotal = replace(ExpectancyTotal, is.na(ExpectancyTotal), -1)) %>% filter(ExpectancyTotal != -1)
+expectancyWaterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
+expectancyServiceGDPClean <- serviceGDP %>% mutate(ServiceGDP = replace(ServiceGDP, is.na(ServiceGDP), -1)) %>% filter(ServiceGDP != -1)
+expectancyTradeGDPClean <- tradeGDP %>% mutate(TradeGDP = replace(TradeGDP, is.na(TradeGDP), -1)) %>% filter(TradeGDP != -1)
+expectancyCapitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
+expectancyOverallGDPClean <- overallGDP %>% mutate(OverallGDP = replace(OverallGDP, is.na(OverallGDP), -1)) %>% filter(OverallGDP != -1)
+
+
+
 
 ## drop columns
 mortalityColDel <- c("GHO", "PUBLISHSTATE", "REGION", "Display.Value", "Low", "High", "Comments")
