@@ -127,13 +127,11 @@ mortalityUnder5Clean <- mortalityUnder5 %>% mutate(mortalityValue = replace(mort
 expectancyFemaleClean <- expectancyFemale %>% mutate(ExpectancyFemale = replace(ExpectancyFemale, is.na(ExpectancyFemale), -1)) %>% filter(ExpectancyFemale != -1)
 expectancyMaleClean <- expectancyMale %>% mutate(ExpectancyMale = replace(ExpectancyMale, is.na(ExpectancyMale), -1)) %>% filter(ExpectancyMale != -1)
 expectancyTotalClean <- expectancyTotal %>% mutate(ExpectancyTotal = replace(ExpectancyTotal, is.na(ExpectancyTotal), -1)) %>% filter(ExpectancyTotal != -1)
-expectancyWaterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
-expectancyServiceGDPClean <- serviceGDP %>% mutate(ServiceGDP = replace(ServiceGDP, is.na(ServiceGDP), -1)) %>% filter(ServiceGDP != -1)
-expectancyTradeGDPClean <- tradeGDP %>% mutate(TradeGDP = replace(TradeGDP, is.na(TradeGDP), -1)) %>% filter(TradeGDP != -1)
-expectancyCapitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
-expectancyOverallGDPClean <- overallGDP %>% mutate(OverallGDP = replace(OverallGDP, is.na(OverallGDP), -1)) %>% filter(OverallGDP != -1)
-
-
+WaterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
+serviceGDPClean <- serviceGDP %>% mutate(ServiceGDP = replace(ServiceGDP, is.na(ServiceGDP), -1)) %>% filter(ServiceGDP != -1)
+tradeGDPClean <- tradeGDP %>% mutate(TradeGDP = replace(TradeGDP, is.na(TradeGDP), -1)) %>% filter(TradeGDP != -1)
+capitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
+overallGDPClean <- overallGDP %>% mutate(OverallGDP = replace(OverallGDP, is.na(OverallGDP), -1)) %>% filter(OverallGDP != -1)
 
 
 ## drop columns
@@ -159,6 +157,15 @@ gdpJoin <- inner_join(iso_codes, gdpClean, by = c("ISO2" = "iso2c"))
 literacyFemaleJoin <- inner_join(iso_codes, literacyFemaleClean, by = c("ISO2" = "iso2c"))
 literacyMaleJoin <- inner_join(iso_codes, literacyMaleClean, by = c("ISO2" = "iso2c"))
 mortalityUnder5Join <- inner_join(iso_codes, mortalityUnder5Clean, by = c("ISO3" = "iso3"))
+expectancyFemaleJoin <- inner_join(iso_codes, expectancyFemaleClean, by = c("ISO2" = "iso2c"))
+expectancyMaleJoin <- inner_join(iso_codes, expectancyMaleClean, by = c("ISO2" = "iso2c"))
+expectancyTotalJoin <- inner_join(iso_codes, expectancyTotalClean, by = c("ISO2" = "iso2c"))
+waterAccessJoin <- inner_join(iso_codes, waterAccessClean, by = c("ISO2" = "iso2c"))
+tradeGDPJoin <- inner_join(iso_codes, tradeGDPClean, by = c("ISO2" = "iso2c"))
+serviceGDPJoin <- inner_join(iso_codes, serviceGDPClean, by = c("ISO2" = "iso2c"))
+capitaGDPJoin <- inner_join(iso_codes, capitaGDPClean, by = c("ISO2" = "iso2c"))
+overallGDPJoin <- inner_join(iso_codes, overallGDPClean, by = c("ISO2" = "iso2c"))
+
 
 ## Mortality Data by Gender
 
