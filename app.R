@@ -45,7 +45,40 @@ write.csv(literacyFemale, 'literacyFemale.csv', row.names = FALSE) # save raw da
 # Pull WHO data from API Query: MORTALITY UNDER AGE 5 DATA
 mortalityUnder5 <- read.csv(url("https://apps.who.int/gho/athena/api/GHO/MDG_0000000007?format=csv"))
 write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE) # save raw data to csv
- 
+
+# World Bank data from API Query with WDI Package: FEMALE LIFE EXPECTANCY DATA 
+expectancyFemale <- WDI(country = "all", indicator = "SP.DYN.LE00.FE.IN", start = 1980, end = 2018)
+write.csv(expectancyFemale, 'expectancyFemale.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: MALE LIFE EXPECTANCY DATA 
+expectancyMale <- WDI(country = "all", indicator = "SP.DYN.LE00.MA.IN", start = 1980, end = 2018)
+write.csv(expectancyMale, 'expectancyMale.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: TOTAL LIFE EXPECTANCY DATA 
+expectancyTotal <- WDI(country = "all", indicator = "SP.DYN.LE00.IN", start = 1980, end = 2018)
+write.csv(expectancyTotal, 'expectancyTotal.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: ACCESS TO BASIC WATER DATA 
+waterAccess <- WDI(country = "all", indicator = "SH.H2O.BASW.ZS", start = 1980, end = 2018)
+write.csv(waterAccess, 'waterAccess.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: SERVICES AS % OF GDP DATA 
+serviceGDP <- WDI(country = "all", indicator = "NV.SRV.TOTL.ZS", start = 1980, end = 2018)
+write.csv(serviceGDP, 'serviceGDP.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: TRADE AS % OF GDP DATA 
+tradeGDP <- WDI(country = "all", indicator = "NE.TRD.GNFS.ZS", start = 1980, end = 2018)
+write.csv(tradeGDP, 'tradeGDP.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: GDP PER CAPITA DATA 
+capitaGDP <- WDI(country = "all", indicator = "NY.GDP.PCAP.PP.KD", start = 1980, end = 2018)
+write.csv(capitaGDP, 'capitaGDP.csv', row.names = FALSE) # save raw data to csv
+
+# World Bank data from API Query with WDI Package: OVERALL GDP DATA 
+overallGDP <- WDI(country = "all", indicator = "NY.GDP.MKTP.KD", start = 1980, end = 2018)
+write.csv(overallGDP, 'overallGDP.csv', row.names = FALSE) # save raw data to csv
+
+
 # Backup Read from CSV (for presentation purposes due to API server outages)
 # Rely on API - To only be used during presentation if website is down
 
@@ -53,6 +86,15 @@ write.csv(mortalityUnder5, 'mortalityUnder5.csv', row.names = FALSE) # save raw 
 # literacyMale <- read.csv("literacyMale.csv")
 # literacyFemale <- read.csv("literacyFemale.csv")
 # mortalityUnder5 <- read.csv("mortalityUnder5.csv")
+# expectancyFemale <- read.csv("expectancyFemale.csv")
+# expectancyMale <- read.csv("expectancyMale.csv")
+# expectancyTotal <- read.csv("expectancyTotal.csv")
+# waterAccess <- read.csv("waterAccess.csv")
+# serviceGDP <- read.csv("serviceGDP.csv")
+# tradeGDP <- read.csv("tradeGDP.csv")
+# capitaGDP <- read.csv("capitaGDP.csv")
+# overallGDP <- read.csv("overallGDP.csv")
+
 
 ##### Cleaning of World Bank Data ####
 ## GDP, Literacy Male, Literacy Female
