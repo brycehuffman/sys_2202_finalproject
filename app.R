@@ -10,6 +10,7 @@ if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.
 if(!require(ggvis)) install.packages("ggvis", repos = "http://cran.us.r-project.org")
 
 ##### LIBRARIES FOR SERVER: WORLDMAP
+
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
 if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
@@ -17,7 +18,6 @@ if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.
 if(!require(stringr)) install.packages("stringr", repos = "http://cran.us.r-project.org")
 if(!require(countrycode)) install.packages("countrycode", repos = "http://cran.us.r-project.org")
 if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
-if(!require(ggiraph)) install.packages("ggiraph", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
 if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org")
@@ -255,7 +255,8 @@ ui <- fluidPage(
       wellPanel(
         h4("Notes"),
         p("Map may take a few moments to load."),
-        textOutput("data_source")
+        textOutput("data_source"),
+        textOutput("data_source2")
         )
       ),
       column(8, align = "center", wellPanel( 
@@ -364,7 +365,6 @@ createWorldMap <- function(name, year_input){
   
   # Get column corresponding to user specified date and create a boolean column for missing values
   a = as.numeric(which(names(DataSource)==year_input))                        # get the column corresponding to user specified date 
-  DataSource$missingD2 = with(DataSource, is.na(DataSource[,a]))              # see which rows are missing data for the specified year
   
   # Apply a logarithmic scale to normalize the color distribution of the world map for GDP
   Selected = DataSource[,a]                                                             # Data for choosen attribute for user selected year
@@ -376,12 +376,10 @@ createWorldMap <- function(name, year_input){
   
   if(name=="GDP"){
     filler = DataSource$lnfactors
+    plotType = "logarithmic"
   }else{
-    filler = DataSource$factors}
-  
-  # See what Type of plot you are using -- (Could be replaced by just a name check but who knows if you'll need it later)
-  ln = na.omit(ifelse(filler==DataSource$factors,"linear","logarithmic"))
-  plotType = ln[1]
+    filler = DataSource$factors
+    plotType = "linear"}
   
   # Calculate the scale to customize the legend used in the Map
   max_n = max(na.omit(filler))
@@ -398,7 +396,7 @@ createWorldMap <- function(name, year_input){
   tick5 = tick4 + size_ticks
   tick6 = max_n
   
-  # Get quartiles for the legend in linear and log format
+  # Get septiles for the legend in linear and log format
   if(plotType=="linear"){
     max_value = as.integer(max(na.omit(DataSource[,a])))           
     min_value = as.integer(min(na.omit(DataSource[,a])))
@@ -442,11 +440,7 @@ createWorldMap <- function(name, year_input){
   lab5 = q5_value
   lab6 = max_value
   
-  
-  # Get the value to be shown when you hover over the map with the mouse
-  DataSource$Country = DataSource$region
-  DataSource$Country = paste(DataSource$Country,":",as.integer(DataSource[,a]))
-  
+  # Plot the Map using lat and long data with a fill set by the filler variable on line 277
   myMap<-ggplot() +
     geom_polygon(data = DataSource, aes(x = long, y = lat, group = group, fill = filler,text = paste0("Country : ", region, "<br>","Value : ", as.integer(DataSource[,a])))) +
     labs(title = paste(year_input,name,sep = " "),subtitle = paste(data_units,"(",plotType,"scale )") ,caption = paste("source: ",Contributor)) +
@@ -466,7 +460,7 @@ createWorldMap <- function(name, year_input){
           ,legend.background = element_rect(fill = "#444444")
     )
   
-  # for interactive plot myMap2<- ggiraph(code = print(myMap2),tooltip_offx = 20, tooltip_offy = -10,width_svg = 10,height_svg = 6,zoom_max = 4)
+  # Get the plot of the world with a custom tooltip to display country and value
   myMap2 <- ggplotly(myMap,tooltip = "text") %>%
     # get the subtitle and title for the plot
     layout(title = list(text = paste0(year_input," ",name,
@@ -543,8 +537,9 @@ server <- function(input, output){
     # output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
     # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
      output$mapPlot <- renderPlotly({createWorldMap(name(), Start_year())}) 
-     output$data_source <- renderText({paste("Map Datasource: ",setContributor(name()))})
-  
+     output$data_source <- renderText({paste("Map/Scatter x-axis Datasource: ",setContributor(name()))})
+     output$data_source2 <- renderText({paste("Scatter y-axis DataSource: ",scatterContributor())})
+     
 ## Reactive Scatterplot
   
   # setup reactive variable for x factor in UI
@@ -567,6 +562,16 @@ server <- function(input, output){
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
    })
+   
+   scatterContributor<- reactive({
+     if ("Real GDP per Capita, 2010 US Dollars" %in% input$y_factor) return("World Bank")
+     if ("Male Literacy Rate, over 15 years old" %in% input$y_factor) return("World Bank")
+     if ("Female Literacy Rate, over 15 years old" %in% input$y_factor) return("World Bank")
+     if ("Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+   })
+   
    
    # setup reactive variable for x axis label in scatterplot
    # matches factor displayed from world map
