@@ -228,7 +228,8 @@ ui <- fluidPage(
       wellPanel(
         h4("Notes"),
         p("Map may take a few moments to load."),
-        textOutput("data_source")
+        textOutput("data_source"),
+        textOutput("data_source2")
         )
       ),
       column(8, align = "center", wellPanel( 
@@ -509,8 +510,9 @@ server <- function(input, output){
     # output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
     # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
      output$mapPlot <- renderPlotly({createWorldMap(name(), Start_year())}) 
-     output$data_source <- renderText({paste("Map Datasource: ",setContributor(name()))})
-  
+     output$data_source <- renderText({paste("Map/Scatter x-axis Datasource: ",setContributor(name()))})
+     output$data_source2 <- renderText({paste("Scatter y-axis DataSource: ",scatterContributor())})
+     
 ## Reactive Scatterplot
   
   # setup reactive variable for x factor in UI
@@ -533,6 +535,16 @@ server <- function(input, output){
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
    })
+   
+   scatterContributor<- reactive({
+     if ("Real GDP per Capita, 2010 US Dollars" %in% input$y_factor) return("World Bank")
+     if ("Male Literacy Rate, over 15 years old" %in% input$y_factor) return("World Bank")
+     if ("Female Literacy Rate, over 15 years old" %in% input$y_factor) return("World Bank")
+     if ("Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+   })
+   
    
    # setup reactive variable for x axis label in scatterplot
    # matches factor displayed from world map
