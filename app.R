@@ -148,7 +148,6 @@ iso_codes <- url %>%
 iso_codes <- iso_codes[[1]][, -1]
 iso_codes <- iso_codes[!apply(iso_codes, 1, function(x){all(x == x[1])}), ]
 names(iso_codes) <- c("Country", "ISO2", "ISO3", "UN")
-head(iso_codes)
 
 # Filter Tables to Countries Only
 # Inner Join with List of Country Codes (if a country and in dataset, keep record)
