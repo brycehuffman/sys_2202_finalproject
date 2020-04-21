@@ -2,33 +2,33 @@
 
 ##### LIBRARIES FROM UI #####
 
-if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org")
+if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org"); library(shiny)
 
 ##### LIBRARIES FOR SERVER: SCATTERPLOT
 
-if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
-if(!require(ggvis)) install.packages("ggvis", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org"); library(dplyr)
+if(!require(ggvis)) install.packages("ggvis", repos = "http://cran.us.r-project.org"); library(ggvis)
 
 ##### LIBRARIES FOR SERVER: WORLDMAP
 
-if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
-if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
-if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
-if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.org")
-if(!require(stringr)) install.packages("stringr", repos = "http://cran.us.r-project.org")
-if(!require(countrycode)) install.packages("countrycode", repos = "http://cran.us.r-project.org")
-if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
-if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org") # interactive labels for plot
-if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org") # interactive labels for plot
-if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org")
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org"); library(tidyverse)
+if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org"); library(rvest)
+if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org"); library(magrittr)
+if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.org"); library(ggmap)
+if(!require(stringr)) install.packages("stringr", repos = "http://cran.us.r-project.org"); library(stringr)
+if(!require(countrycode)) install.packages("countrycode", repos = "http://cran.us.r-project.org"); library(countrycode)
+if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org"); library(ggplot2)
+if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org"); library(RColorBrewer) # interactive labels for plot
+if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-project.org"); library(plotly) # interactive labels for plot
+if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org"); library(maps)
 
 
 ##### DATA PROCESSING #####
 
-if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
-if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org")
-if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
-if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org"); library(tidyr)
+if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org"); library(WDI)
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org"); library(dplyr)
+if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org"); library(rvest)
 
 # World Bank data from API Query with WDI Package: GDP DATA
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1980, end = 2018)
