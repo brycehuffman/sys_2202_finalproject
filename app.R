@@ -71,8 +71,8 @@ tradeGDP <- WDI(country = "all", indicator = "NE.TRD.GNFS.ZS", start = 1980, end
 write.csv(tradeGDP, 'tradeGDP.csv', row.names = FALSE) # save raw data to csv
 
 # World Bank data from API Query with WDI Package: GDP PER CAPITA DATA 
-capitaGDP <- WDI(country = "all", indicator = "NY.GDP.PCAP.PP.KD", start = 1980, end = 2018)
-write.csv(capitaGDP, 'capitaGDP.csv', row.names = FALSE) # save raw data to csv
+#capitaGDP <- WDI(country = "all", indicator = "NY.GDP.PCAP.PP.KD", start = 1980, end = 2018)
+#write.csv(capitaGDP, 'capitaGDP.csv', row.names = FALSE) # save raw data to csv
 
 # World Bank data from API Query with WDI Package: OVERALL GDP DATA 
 overallGDP <- WDI(country = "all", indicator = "NY.GDP.MKTP.KD", start = 1980, end = 2018)
@@ -92,7 +92,7 @@ write.csv(overallGDP, 'overallGDP.csv', row.names = FALSE) # save raw data to cs
 # waterAccess <- read.csv("waterAccess.csv")
 # serviceGDP <- read.csv("serviceGDP.csv")
 # tradeGDP <- read.csv("tradeGDP.csv")
-# capitaGDP <- read.csv("capitaGDP.csv")
+## capitaGDP <- read.csv("capitaGDP.csv")
 # overallGDP <- read.csv("overallGDP.csv")
 
 
@@ -112,7 +112,7 @@ names(expectancyTotal)[3] <- "ExpectancyTotal"
 names(waterAccess)[3] <- "WaterAccess"
 names(serviceGDP)[3] <- "ServiceGDP"
 names(tradeGDP)[3] <- "TradeGDP"
-names(capitaGDP)[3] <- "CapitaGDP"
+#names(capitaGDP)[3] <- "CapitaGDP"
 names(overallGDP)[3] <- "OverallGDP"
 
 
@@ -130,7 +130,7 @@ expectancyTotalClean <- expectancyTotal %>% mutate(ExpectancyTotal = replace(Exp
 waterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
 serviceGDPClean <- serviceGDP %>% mutate(ServiceGDP = replace(ServiceGDP, is.na(ServiceGDP), -1)) %>% filter(ServiceGDP != -1)
 tradeGDPClean <- tradeGDP %>% mutate(TradeGDP = replace(TradeGDP, is.na(TradeGDP), -1)) %>% filter(TradeGDP != -1)
-capitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
+#capitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
 overallGDPClean <- overallGDP %>% mutate(OverallGDP = replace(OverallGDP, is.na(OverallGDP), -1)) %>% filter(OverallGDP != -1)
 
 
@@ -162,7 +162,7 @@ expectancyTotalJoin <- inner_join(iso_codes, expectancyTotalClean, by = c("ISO2"
 waterAccessJoin <- inner_join(iso_codes, waterAccessClean, by = c("ISO2" = "iso2c"))
 tradeGDPJoin <- inner_join(iso_codes, tradeGDPClean, by = c("ISO2" = "iso2c"))
 serviceGDPJoin <- inner_join(iso_codes, serviceGDPClean, by = c("ISO2" = "iso2c"))
-capitaGDPJoin <- inner_join(iso_codes, capitaGDPClean, by = c("ISO2" = "iso2c"))
+#capitaGDPJoin <- inner_join(iso_codes, capitaGDPClean, by = c("ISO2" = "iso2c"))
 overallGDPJoin <- inner_join(iso_codes, overallGDPClean, by = c("ISO2" = "iso2c"))
 
 
@@ -186,7 +186,7 @@ expectancyTotalFinal <- spread(expectancyTotalJoin, year, ExpectancyTotal)
 waterAccessFinal <- spread(waterAccessJoin, year, WaterAccess)
 tradeGDPFinal <- spread(tradeGDPJoin, year, TradeGDP)
 serviceGDPFinal <- spread(serviceGDPJoin, year, ServiceGDP)
-capitaGDPFinal <- spread(capitaGDPJoin, year, CapitaGDP)
+#capitaGDPFinal <- spread(capitaGDPJoin, year, CapitaGDP)
 overallGDPFinal <- spread(overallGDPJoin, year, OverallGDP)
 
 ## Export Final Data to CSVs
@@ -203,7 +203,7 @@ write.csv(expectancyTotalFinal, "expectancyTotalFinal.csv", row.names = FALSE)
 write.csv(waterAccessFinal, "waterAccessFinal.csv", row.names = FALSE)
 write.csv(tradeGDPFinal, "tradeGDPFinal.csv", row.names = FALSE)
 write.csv(serviceGDPFinal, "serviceGDPFinal.csv", row.names = FALSE)
-write.csv(capitaGDPFinal, "capitaGDPFinal.csv", row.names = FALSE)
+#write.csv(capitaGDPFinal, "capitaGDPFinal.csv", row.names = FALSE)
 write.csv(overallGDPFinal, "overallGDPFinal.csv", row.names = FALSE)
 
 ##### Processing for World Map Creation #####
@@ -227,7 +227,7 @@ map.world_joined9<-left_join(map.world,expectancyTotalFinal,by=c('ISO'='ISO3')) 
 map.world_joined10<-left_join(map.world,waterAccessFinal,by=c('ISO'='ISO3'))        # Basic Access to Water
 map.world_joined11<-left_join(map.world,tradeGDPFinal,by=c('ISO'='ISO3'))        # Trade GDP
 map.world_joined12<-left_join(map.world,serviceGDPFinal,by=c('ISO'='ISO3'))        # Service GDP
-map.world_joined13<-left_join(map.world,capitaGDPFinal,by=c('ISO'='ISO3'))        # Capita GDP
+# map.world_joined13<-left_join(map.world,capitaGDPFinal,by=c('ISO'='ISO3'))        # Capita GDP
 map.world_joined14<-left_join(map.world,overallGDPFinal,by=c('ISO'='ISO3'))        # Overall GDP
 
 
@@ -253,7 +253,7 @@ ui <- fluidPage(
                             "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5",
                               "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
                                 "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
-                                  "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
+                                  "Trade as % of GDP", "Services as % of GDP",
                                     "Overall GDP, in constant 2010 US Dollars")
                             ),
                             selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
@@ -276,11 +276,11 @@ ui <- fluidPage(
                       "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5",
                       "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
                       "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
-                      "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
+                      "Trade as % of GDP", "Services as % of GDP",
                       "Overall GDP, in constant 2010 US Dollars"),
                     selected = "Male Literacy Rate, over 15 years old"
         ),
-        p("Note: Both the year and x-axis are represented by the factors selected for the World Map."),
+        p("Note: The x-axis factor and year of the scatterplot correspond to the world map selections."),
         
       ),
       wellPanel(
@@ -293,7 +293,6 @@ ui <- fluidPage(
       column(8, align = "center", wellPanel( 
         h4("World Map Visualization"),
         plotlyOutput("mapPlot", width = 650, height = 406)),
-        # ggiraphOutput("intMapPlot")), for interactive plot
         
         wellPanel(
           h4("Scatterplot Visualization"), 
@@ -344,12 +343,8 @@ setDataSource <- function(name){
                         if(name=="Service GDP"){
                           return(map.world_joined12)
                         }else{
-                          if(name=="GDP per Capita"){
-                            return(map.world_joined13)
-                          }else{
-                            if(name=="Overall GDP"){
-                              return(map.world_joined14)
-                            }
+                          if(name=="Overall GDP"){
+                            return(map.world_joined14)
                           }
                         }
                       }
@@ -364,6 +359,7 @@ setDataSource <- function(name){
     }
   }
 }
+
 
 
 setContributor <- function(name){
@@ -404,12 +400,8 @@ setContributor <- function(name){
                         if(name=="Service GDP"){
                           return("World Bank")
                         }else{
-                          if(name=="GDP per Capita"){
+                          if(name=="Overall GDP"){
                             return("World Bank")
-                          }else{
-                            if(name=="Overall GDP"){
-                              return("World Bank")
-                            }
                           }
                         }
                       }
@@ -426,13 +418,14 @@ setContributor <- function(name){
 }
 
 
+
 setData_Units <- function(name){
   # returns correct data units info based on name
   if(name=="Female Mortality"){
-    return("number of female children under 5 who died per 1000 live births")
+    return("mortality of female children under 5, per 1000")
   }else{
     if(name=="Male Mortality"){
-      return("number of male children under 5 who died per 1000 live births")
+      return("mortality of male children under 5, per 1000")
     }else{
       if(name=="GDP"){
         return("GDP in USD per capita")
@@ -444,32 +437,28 @@ setData_Units <- function(name){
             return("percent of males who are literate")
           }else{
             if(name=="Overall Mortality"){
-              return("number of children under 5 who died per 1000 live births")
+              return("mortality of children under 5, per 1000")
             }else{
               if(name=="Female Life Expectancy"){
-                return("from birth, projected age females will live to")
+                return("projected age of life at birth")
               }else{
                 if(name=="Male Life Expectancy"){
-                  return("from birth, projected age males will life to")
+                  return("projected age of life at birth")
                 }else{
                   if(name=="General Life Expectancy"){
-                    return("from birth, projected age the population will live to")
+                    return("projected age of life at birth")
                   }else{
                     if(name=="Basic Access to Water"){
-                      return("percent of population that uses at least basic drinking water services")
+                      return("percentage of access to minimum of basic drinking water")
                     }else{
                       if(name=="Trade GDP"){
                         return("percent to which trading makes up a country's GDP")
                       }else{
                         if(name=="Service GDP"){
-                          return("percent to which the value added by services makes up a country's GDP")
+                          return("perent to which services make up a country's GDP")
                         }else{
-                          if(name=="GDP per Capita"){
-                            return("GDP conversion via purchasing power parity using 2011 international $")
-                          }else{
-                            if(name=="Overall GDP"){
-                              return("GDP in 2010 USD")
-                            }
+                          if(name=="Overall GDP"){
+                            return("GDP in 2010 USD")
                           }
                         }
                       }
@@ -484,6 +473,7 @@ setData_Units <- function(name){
     }
   }
 }
+
 
 createWorldMap <- function(name, year_input){
   DataSource = setDataSource(name)
@@ -664,7 +654,7 @@ server <- function(input, output){
     if ("Percentage of Population With Access to Basic Water Services" %in% input$map_factor) return("Basic Access to Water")
     if ("Trade as % of GDP" %in% input$map_factor) return("Trade GDP")
     if ("Services as % of GDP" %in% input$map_factor) return("Service GDP")
-    if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return("GDP per Capita")
+   # if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return("GDP per Capita")
     if ("Overall GDP, in constant 2010 USD" %in% input$map_factor) return("Overall GDP")
     
   })
@@ -696,7 +686,7 @@ server <- function(input, output){
      if ("Percentage of Population With Access to Basic Water Services" %in% input$map_factor) return(waterAccessFinal)
      if ("Trade as % of GDP" %in% input$map_factor) return(tradeGDPFinal)
      if ("Services as % of GDP" %in% input$map_factor) return(serviceGDPFinal)
-     if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return(capitaGDPFinal)
+    # if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return(capitaGDPFinal)
      if ("Overall GDP, in constant 2010 USD" %in% input$map_factor) return(overallGDPFinal)
    })
    
@@ -714,7 +704,7 @@ server <- function(input, output){
      if ("Percentage of Population With Access to Basic Water Services" %in% input$y_factor) return(waterAccessFinal)
      if ("Trade as % of GDP" %in% input$y_factor) return(tradeGDPFinal)
      if ("Services as % of GDP" %in% input$y_factor) return(serviceGDPFinal)
-     if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return(capitaGDPFinal)
+    # if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return(capitaGDPFinal)
      if ("Overall GDP, in constant 2010 USD" %in% input$y_factor) return(overallGDPFinal)
    })
    
@@ -731,7 +721,7 @@ server <- function(input, output){
      if ("Percentage of Population With Access to Basic Water Services" %in% input$y_factor) return("World Bank")
      if ("Trade as % of GDP" %in% input$y_factor) return("World Bank")
      if ("Services as % of GDP" %in% input$y_factor) return("World Bank")
-     if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return("World Bank")
+    # if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return("World Bank")
      if ("Overall GDP, in constant 2010 USD" %in% input$y_factor) return("World Bank")
    })
    
