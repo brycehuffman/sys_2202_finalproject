@@ -222,6 +222,14 @@ map.world_joined3<-left_join(map.world,literacyFemaleFinal,by=c('ISO'='ISO3'))  
 map.world_joined4<-left_join(map.world,mortalityMaleFinal,by=c('ISO'='ISO3'))        # Male Mortality
 map.world_joined5<-left_join(map.world,mortalityFemaleFinal,by=c('ISO'='ISO3'))      # Female Mortality
 map.world_joined6<-left_join(map.world,mortalityBTSXFinal,by=c('ISO'='ISO3'))        # Both Sex Mortality
+map.world_joined7<-left_join(map.world,expectancyFemaleFinal,by=c('ISO'='ISO3'))        # Female Life Expectancy
+map.world_joined8<-left_join(map.world,expectancyMaleFinal,by=c('ISO'='ISO3'))        # Male Life Expectancy
+map.world_joined9<-left_join(map.world,expectancyTotalFinal,by=c('ISO'='ISO3'))        # Total Life Expectancy
+map.world_joined10<-left_join(map.world,waterAccessFinal,by=c('ISO'='ISO3'))        # Basic Access to Water
+map.world_joined11<-left_join(map.world,tradeGDPFinal,by=c('ISO'='ISO3'))        # Trade GDP
+map.world_joined12<-left_join(map.world,serviceGDPFinal,by=c('ISO'='ISO3'))        # Service GDP
+map.world_joined13<-left_join(map.world,capitaGDPFinal,by=c('ISO'='ISO3'))        # Capita GDP
+map.world_joined14<-left_join(map.world,overallGDPFinal,by=c('ISO'='ISO3'))        # Overall GDP
 
 
 ##### UI: USER INTERFACE FOR R SHINY (AS OF 4/13) #####
@@ -243,7 +251,11 @@ ui <- fluidPage(
             selectInput("map_factor", "Choose a factor for world map visualization",
                          c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                           "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                            "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5")
+                            "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5",
+                              "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
+                                "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
+                                  "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
+                                    "Overall GDP, in constant 2010 USD")
                             ),
                             selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
       ),
@@ -262,7 +274,11 @@ ui <- fluidPage(
         selectInput("y_factor", "Choose a factor for the y-axis of the scatter plot",
                     c("Real GDP per Capita, 2010 US Dollars", "Male Literacy Rate, over 15 years old",
                       "Female Literacy Rate, over 15 years old", "Infant Mortality Rate per 1000, under 5",
-                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5"),
+                      "Female Infant Mortality Rate per 1000, under 5", "Male Infant Mortality Rate per 1000, under 5",
+                      "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
+                      "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
+                      "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
+                      "Overall GDP, in constant 2010 USD"),
                     selected = "Male Literacy Rate, over 15 years old"
         ),
         p("Note: Both the year and x-axis are represented by the factors selected for the World Map."),
@@ -310,6 +326,38 @@ setDataSource <- function(name){
           }else{
             if(name=="Overall Mortality"){
               return(map.world_joined6)
+            }else{
+              if(name=="Female Life Expectancy"){
+                return(map.world_joined7)
+              }else{
+                if(name=="Male Life Expectancy"){
+                  return(map.world_joined8)
+                }else{
+                  if(name=="Overall Life Expectancy"){
+                    return(map.world_joined9)
+                  }else{
+                    if(name=="Basic Access to Water"){
+                      return(map.world_joined10)
+                    }else{
+                      if(name=="Trade GDP"){
+                        return(map.world_joined11)
+                      }else{
+                        if(name=="Service GDP"){
+                          return(map.world_joined12)
+                        }else{
+                          if(name=="GDP per Capita"){
+                            return(map.world_joined13)
+                          }else{
+                            if(name=="Overall GDP"){
+                              return(map.world_joined14)
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -338,6 +386,38 @@ setContributor <- function(name){
           }else{
             if(name=="Overall Mortality"){
               return("World Health Organization")
+            }else{
+              if(name=="Female Life Expectancy"){
+                return("World Bank")
+              }else{
+                if(name=="Male Life Expectancy"){
+                  return("World Bank")
+                }else{
+                  if(name=="General Life Expectancy"){
+                    return("World Bank")
+                  }else{
+                    if(name=="Basic Access to Water"){
+                      return("World Bank")
+                    }else{
+                      if(name=="Trade GDP"){
+                        return("World Bank")
+                      }else{
+                        if(name=="Service GDP"){
+                          return("World Bank")
+                        }else{
+                          if(name=="GDP per Capita"){
+                            return("World Bank")
+                          }else{
+                            if(name=="Overall GDP"){
+                              return("World Bank")
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -356,7 +436,7 @@ setData_Units <- function(name){
       return("number of male children under 5 who died per 1000 live births")
     }else{
       if(name=="GDP"){
-        return("GDP in US dollars per capita")
+        return("GDP in USD per capita")
       }else{
         if(name=="Female Literacy"){
           return("percent of females who are literate")
@@ -366,6 +446,38 @@ setData_Units <- function(name){
           }else{
             if(name=="Overall Mortality"){
               return("number of children under 5 who died per 1000 live births")
+            }else{
+              if(name=="Female Life Expectancy"){
+                return("from birth, projected age females will live to")
+              }else{
+                if(name=="Male Life Expectancy"){
+                  return("from birth, projected age males will life to")
+                }else{
+                  if(name=="General Life Expectancy"){
+                    return("from birth, projected age the population will live to")
+                  }else{
+                    if(name=="Basic Access to Water"){
+                      return("percent of population that uses at least basic drinking water services")
+                    }else{
+                      if(name=="Trade GDP"){
+                        return("percent to which trading makes up a country's GDP")
+                      }else{
+                        if(name=="Service GDP"){
+                          return("percent to which the value added by services makes up a country's GDP")
+                        }else{
+                          if(name=="GDP per Capita"){
+                            return("GDP conversion via purchasing power parity using 2011 international $")
+                          }else{
+                            if(name=="Overall GDP"){
+                              return("GDP in 2010 USD")
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
