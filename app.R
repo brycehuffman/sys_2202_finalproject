@@ -255,7 +255,7 @@ ui <- fluidPage(
                               "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
                                 "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
                                   "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
-                                    "Overall GDP, in constant 2010 USD")
+                                    "Overall GDP, in constant 2010 US Dollars")
                             ),
                             selectizeInput("year_map", "Choose a year between 1980 and 2018", seq(1980, 2018, 1), selected = 2000)
       ),
@@ -278,7 +278,7 @@ ui <- fluidPage(
                       "Female Life Expectancy at Birth, in years", "Male Life Expectancy at Birth, in years",
                       "Overall Life Expectancy at Birth, in years", "Percentage of Population With Access to Basic Water Services",
                       "Trade as % of GDP", "Services as % of GDP", "GDP per Capita, in constant 2011 international $",
-                      "Overall GDP, in constant 2010 USD"),
+                      "Overall GDP, in constant 2010 US Dollars"),
                     selected = "Male Literacy Rate, over 15 years old"
         ),
         p("Note: Both the year and x-axis are represented by the factors selected for the World Map."),
@@ -659,8 +659,20 @@ server <- function(input, output){
     if ("Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return("Overall Mortality") # NEEDS IMPLEMENTED
     if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return("Female Mortality")
     if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return("Male Mortality")
+    if ("Female Life Expectancy at Birth, in years" %in% input$map_factor) return("Female Life Expectancy")
+    if ("Male Life Expectancy at Birth, in years" %in% input$map_factor) return("Male Life Expectancy")
+    if ("Overall Life Expectancy at Birth, in years" %in% input$map_factor) return("Overall Life Expectancy")
+    if ("Percentage of Population With Access to Basic Water Services" %in% input$map_factor) return("Basic Access to Water")
+    if ("Trade as % of GDP" %in% input$map_factor) return("Trade GDP")
+    if ("Services as % of GDP" %in% input$map_factor) return("Service GDP")
+    if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return("GDP per Capita")
+    if ("Overall GDP, in constant 2010 USD" %in% input$map_factor) return("Overall GDP")
+    
   })
 
+  
+  
+  
   # create World Map Plot Output
     # output$mapPlot <- renderPlot({createWorldMap(name(), Start_year())})
     # output$intMapPlot <- renderggiraph({createWorldMap(name(), Start_year())}) for interactive plot
@@ -679,6 +691,14 @@ server <- function(input, output){
      if ("Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityBTSXFinal)
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$map_factor) return(mortalityMaleFinal)
+     if ("Female Life Expectancy at Birth, in years" %in% input$map_factor) return(expectancyFemaleFinal)
+     if ("Male Life Expectancy at Birth, in years" %in% input$map_factor) return(expectancyMaleFinal)
+     if ("Overall Life Expectancy at Birth, in years" %in% input$map_factor) return(expectancyTotalFinal)
+     if ("Percentage of Population With Access to Basic Water Services" %in% input$map_factor) return(waterAccessFinal)
+     if ("Trade as % of GDP" %in% input$map_factor) return(tradeGDPFinal)
+     if ("Services as % of GDP" %in% input$map_factor) return(serviceGDPFinal)
+     if ("GDP per Capita, in constant 2011 international $" %in% input$map_factor) return(capitaGDPFinal)
+     if ("Overall GDP, in constant 2010 USD" %in% input$map_factor) return(overallGDPFinal)
    })
    
    # setup reactive variable for y factor in UI
@@ -689,6 +709,14 @@ server <- function(input, output){
      if ("Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityBTSXFinal)
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityFemaleFinal)
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return(mortalityMaleFinal)
+     if ("Female Life Expectancy at Birth, in years" %in% input$y_factor) return(expectancyFemaleFinal)
+     if ("Male Life Expectancy at Birth, in years" %in% input$y_factor) return(expectancyMaleFinal)
+     if ("Overall Life Expectancy at Birth, in years" %in% input$y_factor) return(expectancyTotalFinal)
+     if ("Percentage of Population With Access to Basic Water Services" %in% input$y_factor) return(waterAccessFinal)
+     if ("Trade as % of GDP" %in% input$y_factor) return(tradeGDPFinal)
+     if ("Services as % of GDP" %in% input$y_factor) return(serviceGDPFinal)
+     if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return(capitaGDPFinal)
+     if ("Overall GDP, in constant 2010 USD" %in% input$y_factor) return(overallGDPFinal)
    })
    
    scatterContributor<- reactive({
@@ -698,6 +726,14 @@ server <- function(input, output){
      if ("Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
      if ("Female Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
      if ("Male Infant Mortality Rate per 1000, under 5" %in% input$y_factor) return("World Health Organization")
+     if ("Female Life Expectancy at Birth, in years" %in% input$y_factor) return("World Bank")
+     if ("Male Life Expectancy at Birth, in years" %in% input$y_factor) return("World Bank")
+     if ("Overall Life Expectancy at Birth, in years" %in% input$y_factor) return("World Bank")
+     if ("Percentage of Population With Access to Basic Water Services" %in% input$y_factor) return("World Bank")
+     if ("Trade as % of GDP" %in% input$y_factor) return("World Bank")
+     if ("Services as % of GDP" %in% input$y_factor) return("World Bank")
+     if ("GDP per Capita, in constant 2011 international $" %in% input$y_factor) return("World Bank")
+     if ("Overall GDP, in constant 2010 USD" %in% input$y_factor) return("World Bank")
    })
    
    
