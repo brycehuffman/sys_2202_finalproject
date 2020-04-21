@@ -127,7 +127,7 @@ mortalityUnder5Clean <- mortalityUnder5 %>% mutate(mortalityValue = replace(mort
 expectancyFemaleClean <- expectancyFemale %>% mutate(ExpectancyFemale = replace(ExpectancyFemale, is.na(ExpectancyFemale), -1)) %>% filter(ExpectancyFemale != -1)
 expectancyMaleClean <- expectancyMale %>% mutate(ExpectancyMale = replace(ExpectancyMale, is.na(ExpectancyMale), -1)) %>% filter(ExpectancyMale != -1)
 expectancyTotalClean <- expectancyTotal %>% mutate(ExpectancyTotal = replace(ExpectancyTotal, is.na(ExpectancyTotal), -1)) %>% filter(ExpectancyTotal != -1)
-WaterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
+waterAccessClean <- waterAccess %>% mutate(WaterAccess = replace(WaterAccess, is.na(WaterAccess), -1)) %>% filter(WaterAccess != -1)
 serviceGDPClean <- serviceGDP %>% mutate(ServiceGDP = replace(ServiceGDP, is.na(ServiceGDP), -1)) %>% filter(ServiceGDP != -1)
 tradeGDPClean <- tradeGDP %>% mutate(TradeGDP = replace(TradeGDP, is.na(TradeGDP), -1)) %>% filter(TradeGDP != -1)
 capitaGDPClean <- capitaGDP %>% mutate(CapitaGDP = replace(CapitaGDP, is.na(CapitaGDP), -1)) %>% filter(CapitaGDP != -1)
@@ -181,6 +181,14 @@ gdpFinal <- spread(gdpJoin, year , RealGDP)
 mortalityFemaleFinal <- spread(mortalityFemaleJoin, year, mortalityValue)
 mortalityMaleFinal <- spread(mortalityMaleJoin, year, mortalityValue)
 mortalityBTSXFinal <- spread(mortalityBTSXJoin, year, mortalityValue)
+expectancyFemaleFinal <- spread(expectancyFemaleJoin, year, ExpectancyFemale)
+expectancyMaleFinal <- spread(expectancyMaleJoin, year, ExpectancyMale)
+expectancyTotalFinal <- spread(expectancyTotalJoin, year, ExpectancyTotal)
+waterAccessFinal <- spread(waterAccessJoin, year, WaterAccess)
+tradeGDPFinal <- spread(tradeGDPJoin, year, TradeGDP)
+serviceGDPFinal <- spread(serviceGDPJoin, year, ServiceGDP)
+capitaGDPFinal <- spread(capitaGDPJoin, year, CapitaGDP)
+overallGDPFinal <- spread(overallGDPJoin, year, OverallGDP)
 
 ## Export Final Data to CSVs
 
@@ -190,6 +198,14 @@ write.csv(mortalityBTSXFinal, "mortalityBTSXFinal.csv", row.names = FALSE)
 write.csv(mortalityMaleFinal, "mortalityMaleFinal.csv", row.names = FALSE)
 write.csv(mortalityFemaleFinal, "mortalityFemaleFinal.csv", row.names = FALSE)
 write.csv(gdpFinal, "gdpFinal.csv", row.names = FALSE)
+write.csv(expectancyFemaleFinal, "expectancyFemaleFinal.csv", row.names = FALSE)
+write.csv(expectancyMaleFinal, "expectancyMaleFinal.csv", row.names = FALSE)
+write.csv(expectancyTotalFinal, "expectancyTotalFinal.csv", row.names = FALSE)
+write.csv(waterAccessFinal, "waterAccessFinal.csv", row.names = FALSE)
+write.csv(tradeGDPFinal, "tradeGDPFinal.csv", row.names = FALSE)
+write.csv(serviceGDPFinal, "serviceGDPFinal.csv", row.names = FALSE)
+write.csv(capitaGDPFinal, "capitaGDPFinal.csv", row.names = FALSE)
+write.csv(overallGDPFinal, "overallGDPFinal.csv", row.names = FALSE)
 
 ##### Processing for World Map Creation #####
 
