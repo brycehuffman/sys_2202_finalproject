@@ -23,12 +23,14 @@ if(!require(plotly)) install.packages("plotly", repos = "http://cran.us.r-projec
 if(!require(maps)) install.packages("maps", repos = "http://cran.us.r-project.org"); library(maps)
 
 
-##### DATA PROCESSING #####
+##### LIBRARIES FOR DATA PROCESSING #####
 
 if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org"); library(tidyr)
 if(!require(WDI)) install.packages("WDI", repos = "http://cran.us.r-project.org"); library(WDI)
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org"); library(dplyr)
 if(!require(rvest)) install.packages("rvest", repos = "http://cran.us.r-project.org"); library(rvest)
+
+##### GENERAL DATA PROCESSING #####
 
 # World Bank data from API Query with WDI Package: GDP DATA
 gdp <- WDI(country = "all", indicator = "NY.GDP.PCAP.KD", start = 1980, end = 2018)
@@ -79,8 +81,7 @@ write.csv(tradeGDP, 'tradeGDP.csv', row.names = FALSE) # save raw data to csv
 # serviceGDP <- read.csv("serviceGDP.csv")
 # tradeGDP <- read.csv("tradeGDP.csv")
 
-
-##### Cleaning of World Bank Data ####
+##### CLEANING OF WORLD BANK DATA #####
 ## GDP, Literacy Male, Literacy Female
 
 # Change Column Names
@@ -95,7 +96,6 @@ names(expectancyMale)[3] <- "ExpectancyMale"
 names(expectancyTotal)[3] <- "ExpectancyTotal"
 names(serviceGDP)[3] <- "ServiceGDP"
 names(tradeGDP)[3] <- "TradeGDP"
-
 
 ## remove rows with NA values
 # set na values to -1
@@ -194,8 +194,7 @@ map.world_joined9<-left_join(map.world,expectancyTotalFinal,by=c('ISO'='ISO3')) 
 map.world_joined11<-left_join(map.world,tradeGDPFinal,by=c('ISO'='ISO3'))        # Trade GDP
 map.world_joined12<-left_join(map.world,serviceGDPFinal,by=c('ISO'='ISO3'))        # Service GDP
 
-
-##### UI: USER INTERFACE FOR R SHINY (AS OF 4/13) #####
+##### UI: USER INTERFACE FOR R SHINY #####
 
 ui <- fluidPage(
   titlePanel("Health and Economic Factors Visualization"),
@@ -253,7 +252,6 @@ ui <- fluidPage(
           ggvisOutput("scatter1")
         )))
   )
-
 
 ##### FUNCTIONS #####
 
@@ -355,9 +353,6 @@ setContributor <- function(name){
     }
   }
 }
-
-
-
 
 setData_Units <- function(name){
   # returns correct data units info based on name
@@ -550,8 +545,7 @@ createScatterplot <- function(data, xName, yName){
     set_options(keep_aspect = TRUE) 
   }
 
-
-##### SERVER (from scratch) #####
+##### SERVER #####
 
 server <- function(input, output){
   
